@@ -10,3 +10,14 @@ body{
     justify-content: space-around;
     align-items: center;
 }
+
+.footer {
+    background-color: rgb(38, 38, 142);
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    bottom: 0;   
+    justify-content: space-around;
+    text-align: center;
+    position: fixed;
+}

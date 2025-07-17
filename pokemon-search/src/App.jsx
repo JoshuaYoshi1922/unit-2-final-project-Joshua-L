@@ -1,6 +1,8 @@
 
 
+import Footer from './components/Footer'
 import Header from './components/header'
+import Home from './components/HomePage'
 import PokemonDisplay from './components/PokemonDisplay'
 
 function App() {
@@ -9,7 +11,8 @@ function App() {
   return (
     <>
       <Header />
-      <PokemonDisplay pokemon={{name: "Snorlax", type: "Normal"}} />
+      <Home />
+      <Footer />
     </>
   )
 }
