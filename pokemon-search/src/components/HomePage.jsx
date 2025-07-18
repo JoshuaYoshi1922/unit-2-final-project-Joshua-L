@@ -11,14 +11,16 @@ function Home() {
     { id: 4, name: "Charmander", type: "Fire" },
   ];
 
-  const handlSearch = () => {};
+  const handlSearch = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div className="homePage">
       <form onSubmit={handlSearch} className="search-form">
         <input
           type="text"
-          placeholder="Poke who???"
+          placeholder="Who's that Pokemon???"
           className="search-poke"
           value={searchPokemon}
           onChange={(e) => setSearchPokemon(e.target.value)}
@@ -28,9 +30,12 @@ function Home() {
         </button>
       </form>
       <div className="pokemon-grid">
-        {pokemons.map((pokemon) => (
-          <PokemonDisplay pokemon={pokemon} key={pokemon.id} />
-        ))}
+        {pokemons.map(
+          (pokemon) =>
+            pokemon.name.toLowerCase().startsWith(searchPokemon) && (
+              <PokemonDisplay pokemon={pokemon} key={pokemon.id} />
+            )
+        )}
       </div>
     </div>
   );

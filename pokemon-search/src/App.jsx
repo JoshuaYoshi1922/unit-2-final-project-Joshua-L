@@ -9,16 +9,18 @@ import FavPokemon from "./components/FavPokemon";
 function App() {
   return (
     <>
-      <main className="main">
-        <Header />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favpokemon" element={<FavPokemon />} />
-          </Routes>
-        </Router>
-        <Footer />
-      </main>
+      <div>
+        <main className="main">
+          <Router>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/favpokemon" element={<FavPokemon />} />
+            </Routes>
+          </Router>
+          <Footer />
+        </main>
+      </div>
     </>
   );
 }

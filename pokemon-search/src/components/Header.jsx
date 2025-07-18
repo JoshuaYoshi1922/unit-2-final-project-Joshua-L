@@ -1,14 +1,23 @@
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <>
       <header className="header">
-        <h1>Pokemon Orange</h1>
-        <img src="" alt="" className="logo" />
-        <ul>
-          <li>Home</li>
-          <li>About</li>
-          <li>Favorite</li>
-        </ul>
+        POKEMON ORANGE
+        <nav className="navbar">
+          <div className="navbar-brand">
+            <Link to="/">Pokemon App </Link>
+          </div>
+          <div className="navbar-links">
+            <Link to="/" className="nav-link">
+              Home
+            </Link>
+            <Link to="/favpokemon" className="nav-link">
+              Favorites
+            </Link>
+          </div>
+        </nav>
       </header>
     </>
   );

@@ -1,3 +1,5 @@
+import "../css/PokemonDisplay.css"
+
 function PokemonDisplay({ pokemon }) {
   function onFavorite() {
     alert("fav pokemon!");
