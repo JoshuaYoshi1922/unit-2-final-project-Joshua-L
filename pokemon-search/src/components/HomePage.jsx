@@ -1,6 +1,7 @@
 import PokemonDisplay from "./PokemonDisplay";
 import { useState, useEffect } from "react";
 import Pagination from "./pagination";
+import "../css/homepage.css";
 
 function Home() {
   const [searchPokemon, setSearchPokemon] = useState("");

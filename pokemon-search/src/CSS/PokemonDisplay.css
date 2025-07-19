@@ -1,18 +1,38 @@
 .pokemon-card {
   position: relative;
-  grid-template-columns: 60px 60px;
-
+  border: 5px solid;
+  border-radius: 8px;
+  border-color: yellow;
+  overflow: hidden;
+  background-color: #606060;
+  transition: transform 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .pokemon-card:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
-.pokemon-card {
-
+img {
+  width: 90px;
+  height: 50px;
+  border: 5px solid;
+  border-radius: 8px;
+  border-color: rgb(67, 66, 65);  
+  width: 100%;
+  height: 100%;
 }
 
-
+.pokenum {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-left: 20px;
+}
 
 .pokemon-overlay {
   position: absolute;
@@ -22,14 +42,15 @@
   bottom: 0;
   background: linear-gradient(
     to bottom,
-    rgba(90, 16, 16, 0.819),
+    rgba(0, 0, 0, 0.1),
     rgba(0, 0, 0, 0.8)
   );
   opacity: 0;
   transition: opacity 0.2s;
-  display: grid;
-  flex-direction: row;
-  justify-content: space-evenly;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 1rem;
 }
 
@@ -44,7 +65,7 @@
   color: white;
   font-size: 1.5rem;
   padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(162, 161, 161, 0.5);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -60,4 +81,33 @@
 
 .favorite-btn.active {
   color: #ff4757;
+}
+
+.pokemon-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pokemon-info h3 {
+  color: #999;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.pokemon-info p {
+  color: #999;
+  font-size: 1rem;
+}
+
+.pokemon-info {
+  padding: 0.75rem;
+}
+
+.favorite-btn {
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
 }
