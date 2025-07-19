@@ -10,17 +10,11 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [nextUrl, setNextUrl] = useState("");
   const [prevUrl, setPrevUrl] = useState("");
-  
+
   useEffect(() => {
     fetchPokemons("https://pokeapi.co/api/v2/pokemon");
   }, []);
 
-  function gotoNextPage() {
-    if (nextUrl) fetchPokemons(nextUrl);
-  }
-  function gotoPrevPage() {
-    if (prevUrl) fetchPokemons(prevUrl);
-  }
   async function fetchPokemons(url) {
     setLoading(true);
     try {
@@ -54,23 +48,25 @@ function Home() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1300");
+      const response = await fetch(
+        "https://pokeapi.co/api/v2/pokemon?limit=1300"
+      );
       const data = await response.json();
-      const filtered = data.results.filter((poke) => 
-      poke.name.toLowerCase().startsWith(searchPokemon.toLowerCase())
-    );
-    const searchResults = await Promise.all(
-      filtered.map(async (poke) => {
-        const res = await fetch(poke.url);
-        const details = await res.json();
-        return {
-          id: details.id,
-          name: details.name,
-          type: details.types.map((t) => t.type.name).join(", "),
-          sprites: details.sprites.front_default,
-        }
-      })
-    )
+      const filtered = data.results.filter((poke) =>
+        poke.name.toLowerCase().startsWith(searchPokemon.toLowerCase())
+      );
+      const searchResults = await Promise.all(
+        filtered.map(async (poke) => {
+          const res = await fetch(poke.url);
+          const details = await res.json();
+          return {
+            id: details.id,
+            name: details.name,
+            type: details.types.map((t) => t.type.name).join(", "),
+            sprites: details.sprites.front_default,
+          };
+        })
+      );
       setPokemons(searchResults);
       setError(null);
     } catch (err) {
@@ -81,6 +77,13 @@ function Home() {
     }
     setSearchPokemon("");
   };
+
+  function gotoNextPage() {
+    if (nextUrl) fetchPokemons(nextUrl);
+  }
+  function gotoPrevPage() {
+    if (prevUrl) fetchPokemons(prevUrl);
+  }
 
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.toLowerCase().startsWith(searchPokemon.toLowerCase())

@@ -1,3 +1,4 @@
+
 .pokemon-card {
   position: relative;
   border: 5px solid;
@@ -110,4 +111,41 @@ img {
   width: 32px;
   height: 32px;
   font-size: 1.2rem;
+}
+
+.shiny-btn {
+  background-color: rgb(48, 47, 51);
+  border: 1px solid whitesmoke;
+  border-radius: 99px;
+  width: 50px;
+  height: 28px;
+  transition: backgroud-color 0.1s ease, border-color 0.2s ease;
+  cursor: pointer;
+  box-shadow: 1px 1px 10px black;
+  position: relative;
+}
+
+.shiny-btn .thumb {
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border-radius: 44px;
+  transform: translateX(0);
+  transition: left 0.15s ease;
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.shiny-btn.isShiny {
+  background-color: rgb(22, 173, 22);
+}
+
+.shiny-btn:hover {
+  border-color: grey;
+}
+
+.shiny-btn.shiny-btn.isShiny .thumb {
+  left: calc(50px - 25px);
 }

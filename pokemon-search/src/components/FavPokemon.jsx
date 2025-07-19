@@ -1,5 +1,6 @@
 import { usePokemonContext } from "../contexts/PokemonContexts";
 import PokemonDisplay from "./PokemonDisplay";
+import "../css/PokemonDisplay.css";
 
 function FavPokemon() {
   const { favorites } = usePokemonContext();
