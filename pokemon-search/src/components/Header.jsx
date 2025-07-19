@@ -16,6 +16,9 @@ function Header() {
             <Link to="/favpokemon" className="nav-link">
               Favorites
             </Link>
+            <Link to="/about" className="nav-link">
+              About
+            </Link>
           </div>
         </nav>
       </header>
