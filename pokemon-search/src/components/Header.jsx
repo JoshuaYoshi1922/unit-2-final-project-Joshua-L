@@ -5,22 +5,17 @@ function Header() {
     <>
       <header className="header">
         POKEMON ORANGE
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Link to="/">Pokemon App </Link>
-          </div>
-          <div className="navbar-links">
-            <Link to="/" className="nav-link">
-              Home
-            </Link>
-            <Link to="/favpokemon" className="nav-link">
-              Favorites
-            </Link>
-            <Link to="/about" className="nav-link">
-              About
-            </Link>
-          </div>
-        </nav>
+        <ul className="navbar">
+          <li className="nav-link">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="nav-link">
+            <Link to="/favpokemon">Favorites</Link>
+          </li>
+          <li className="nav-link">
+            <Link to="/about">About</Link>
+          </li>
+        </ul>
       </header>
     </>
   );
