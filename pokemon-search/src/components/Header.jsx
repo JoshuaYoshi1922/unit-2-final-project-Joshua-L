@@ -4,7 +4,12 @@ function Header() {
   return (
     <>
       <header className="header">
-        POKEMON ORANGE
+        <h1 className="pokemon-orange">
+          <Link to="/" style={{ textDecoration: "none", color: "orange" }}>
+            POKEMON ORANGE
+          </Link>
+        </h1>
+
         <ul className="navbar">
           <li className="nav-link">
             <Link to="/">Home</Link>

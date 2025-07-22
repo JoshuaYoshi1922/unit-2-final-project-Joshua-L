@@ -5,7 +5,7 @@ import "../css/PokemonDisplay.css";
 function FavPokemon() {
   const { favorites } = usePokemonContext();
 
-  if (favorites) {
+  if (favorites && favorites.length > 0) {
     return (
       <div>
         <h2>Favorite Pokemon</h2>
@@ -16,7 +16,7 @@ function FavPokemon() {
         </div>
       </div>
     );
-  }
+  } else {
 
   return (
     <div className="favorites-empty">
@@ -24,6 +24,7 @@ function FavPokemon() {
       <p>Add you favorite Pokemon</p>
     </div>
   );
+}
 }
 
 export default FavPokemon;

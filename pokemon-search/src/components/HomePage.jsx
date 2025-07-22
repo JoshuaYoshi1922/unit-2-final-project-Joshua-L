@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Pagination from "./pagination";
 import "../css/homepage.css";
 
+const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
+
 function Home() {
   const [searchPokemon, setSearchPokemon] = useState("");
   const [pokemons, setPokemons] = useState([]);
@@ -12,28 +14,32 @@ function Home() {
   const [prevUrl, setPrevUrl] = useState("");
 
   useEffect(() => {
-    fetchPokemons("https://pokeapi.co/api/v2/pokemon");
+    fetchAllPokemons(`${BASE_URL}${searchPokemon}`);
   }, []);
 
-  async function fetchPokemons(url) {
+  async function fetchAllPokemons(url) {
     setLoading(true);
     try {
       const response = await fetch(url);
       const data = await response.json();
+
       setNextUrl(data.next);
       setPrevUrl(data.previous);
-      const results = await Promise.all(
-        data.results.map(async (poke) => {
-          const res = await fetch(poke.url);
-          const details = await res.json();
-          return {
-            id: details.id,
-            name: details.name,
-            type: details.types.map((t) => t.type.name).join(", "),
-            sprites: details.sprites.front_default,
-          };
-        })
-      );
+
+      const getAllPokemonsFromAPI = data.results.map(async (poke) => {
+        const res = await fetch(poke.url);
+        const details = await res.json();
+        return {
+          id: details.id,
+          name: details.name,
+          type: details.types.map((t) => t.type.name).join(", "),
+          height: details.height,
+          sprites: details.sprites.front_default,
+        };
+      });
+
+      const results = await Promise.all(getAllPokemonsFromAPI);
+
       setPokemons(results);
     } catch (error) {
       console.error("Error fetching", error);
@@ -41,84 +47,100 @@ function Home() {
     setLoading(false);
   }
 
-  const handlSearch = async (e) => {
-    e.preventDefault();
-    if (!searchPokemon.trim()) return;
-    if (loading) return;
+  async function fetchSpecificPokemon(url) {
     setLoading(true);
-
     try {
-      const response = await fetch(
-        "https://pokeapi.co/api/v2/pokemon?limit=1300"
-      );
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Pokemon not found");
+      }
       const data = await response.json();
-      const filtered = data.results.filter((poke) =>
-        poke.name.toLowerCase().startsWith(searchPokemon.toLowerCase())
-      );
-      const searchResults = await Promise.all(
-        filtered.map(async (poke) => {
-          const res = await fetch(poke.url);
-          const details = await res.json();
-          return {
-            id: details.id,
-            name: details.name,
-            type: details.types.map((t) => t.type.name).join(", "),
-            sprites: details.sprites.front_default,
-          };
-        })
-      );
-      setPokemons(searchResults);
-      setError(null);
-    } catch (err) {
-      console.log(err);
-      setError("Failed to find Pokemon...");
+
+      // setNextUrl(data.next);
+      // setPrevUrl(data.previous);
+
+      return ([
+        {
+          id: data.id,
+          name: data.name,
+          types: data.types,
+          height: data.height,
+          //Add more data here if needed
+        }
+      ])
+    } catch (error) {
+      console.error("Error fetching", error);
+      throw error;
     } finally {
       setLoading(false);
     }
-    setSearchPokemon("");
+  }
+
+  const handlSearch = async (searchTerm) => {
+    if (!searchTerm) return;
+    if (loading) return;
+
+    try {
+      const newPokemon = await fetchSpecificPokemon(
+        `${BASE_URL}${searchTerm.toLowerCase()}`
+      );
+      setPokemons(newPokemon);
+      setError(null);
+    } catch (error) {
+      console.error(error);
+      setError("Pokemon not found. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+    setSearchPokemon(""); // Clear the search input after search
   };
 
   function gotoNextPage() {
-    if (nextUrl) fetchPokemons(nextUrl);
+    if (nextUrl) fetchAllPokemons(nextUrl);
   }
   function gotoPrevPage() {
-    if (prevUrl) fetchPokemons(prevUrl);
+    if (prevUrl) fetchAllPokemons(prevUrl);
   }
 
-  const filteredPokemons = pokemons.filter((pokemon) =>
-    pokemon.name.toLowerCase().startsWith(searchPokemon.toLowerCase())
-  );
+  const pressEnter = (e) => {
+    if (e.key === "Enter") {
+      handlSearch(searchPokemon);
+    }
+  };
 
   return (
     <div className="homePage">
-      <form onSubmit={handlSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Who's that Pokemon???"
-          className="search-poke"
-          value={searchPokemon}
-          onChange={(e) => setSearchPokemon(e.target.value)}
-        />
-        <button onClick={handlSearch} type="submit" className="search-btn">
-          Search
-        </button>
-      </form>
+      <input
+        type="text"
+        placeholder="Who's that Pokemon???"
+        className="search-poke"
+        value={searchPokemon}
+        name="search"
+        onKeyDown={pressEnter}
+        onChange={(e) => setSearchPokemon(e.target.value)}
+      />
+      <button
+        onClick={() => handlSearch(searchPokemon)}
+        type="submit"
+        className="search-btn"
+      >
+        Search
+      </button>
 
       {error && <div className="error-message">{error}</div>}
 
+
+      <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
       <div className="pokemon-grid">
         {loading ? (
           <p className="loading">Loading...</p>
         ) : (
-          filteredPokemons.map(
-            (pokemon) =>
-              pokemon.name.toLowerCase().startsWith(searchPokemon) && (
-                <PokemonDisplay pokemon={pokemon} key={pokemon.id} />
-              )
-          )
+          pokemons.map((pokemon) => (
+            <PokemonDisplay pokemon={pokemon} key={pokemon.id} />
+          ))
         )}
-      </div>
       <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+      </div>
     </div>
   );
 }

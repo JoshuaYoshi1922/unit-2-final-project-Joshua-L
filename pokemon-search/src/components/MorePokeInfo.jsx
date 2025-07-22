@@ -1,6 +1,8 @@
-function MorePokeInfo () {
+function MorePokeInfo ({}) {
 
-    return
+
+
+    return <h1>maybe</h1>
 }
 
-export default MorePokeInfo()
+export default MorePokeInfo;

@@ -1,14 +1,19 @@
 body {
-  background-color: rgb(165, 165, 165);
+  background-image: url('./images/pokeball_bg.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;  
 }
 
 .header {
-  background-color: rgb(38, 38, 142);
+  background-color: rgba(255, 19, 19, 0.664);
   padding: 10px 10px;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 4dvb; 
 }
 
 .navbar {
@@ -32,11 +37,14 @@ li a:hover {
 }
 
 .footer {
-  background-color: rgb(38, 38, 142);
-  padding: 10px 20px;
+  position: fixed;
+  width: 97.3%;
+  background-color: rgb(164, 164, 165);
+  padding: 10px 10px;
   color: white;
   display: flex;
   bottom: 0;
-  justify-content: space-around;
+  justify-content: space-between;
   text-align: center;
+  border-radius: 2dvb;
 }
