@@ -16,10 +16,11 @@ function App() {
           <main className="main">
             <Router>
               <Header />
+
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/favpokemon" element={<FavPokemon />} />
-                <Route path="/moreinfo" element={<MorePokeInfo />} />
+                <Route path="/pokemon/:id" element={<MorePokeInfo />} />
                 <Route path="/about" element={<About />} />
               </Routes>
               <Footer />

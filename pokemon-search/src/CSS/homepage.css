@@ -2,7 +2,34 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
-  padding: 10rem;
+  padding: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
   width: 100%;
+  
   box-sizing: border-box;
+}
+
+.search-poke {
+
+
+}
+
+.poke-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  align-items: center;
+  padding-top: 1%;
+  margin-top: 10;
+  height: ;
+}
+
+.next-prev {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1%;
+
 }

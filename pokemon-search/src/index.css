@@ -37,8 +37,8 @@ li a:hover {
 }
 
 .footer {
-  position: fixed;
-  width: 97.3%;
+  position: relative;
+  width: 98.5%;
   background-color: rgb(164, 164, 165);
   padding: 10px 10px;
   color: white;

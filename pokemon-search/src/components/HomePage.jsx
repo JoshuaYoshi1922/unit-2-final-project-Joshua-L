@@ -2,6 +2,8 @@ import PokemonDisplay from "./PokemonDisplay";
 import { useState, useEffect } from "react";
 import Pagination from "./pagination";
 import "../css/homepage.css";
+import MorePokeInfo from "./MorePokeInfo";
+import { capitalize } from "../shared/utils";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
@@ -47,10 +49,10 @@ function Home() {
     setLoading(false);
   }
 
-  async function fetchSpecificPokemon(url) {
+  async function fetchSpecificPokemon(BASE_URL) {
     setLoading(true);
     try {
-      const response = await fetch(url);
+      const response = await fetch(BASE_URL);
       if (!response.ok) {
         throw new Error("Pokemon not found");
       }
@@ -110,6 +112,7 @@ function Home() {
 
   return (
     <div className="homePage">
+      <div className="poke-search">
       <input
         type="text"
         placeholder="Who's that Pokemon???"
@@ -119,6 +122,7 @@ function Home() {
         onKeyDown={pressEnter}
         onChange={(e) => setSearchPokemon(e.target.value)}
       />
+      
       <button
         onClick={() => handlSearch(searchPokemon)}
         type="submit"
@@ -126,11 +130,13 @@ function Home() {
       >
         Search
       </button>
-
+      </div>
       {error && <div className="error-message">{error}</div>}
 
 
+      <div className="next-prev">
       <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+      </div>
       <div className="pokemon-grid">
         {loading ? (
           <p className="loading">Loading...</p>
@@ -139,6 +145,8 @@ function Home() {
             <PokemonDisplay pokemon={pokemon} key={pokemon.id} />
           ))
         )}
+      </div>
+        <div className="next-prev">
       <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
       </div>
     </div>

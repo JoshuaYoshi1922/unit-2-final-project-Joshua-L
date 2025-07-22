@@ -1,6 +1,8 @@
 import "../css/PokemonDisplay.css";
 import { usePokemonContext } from "../contexts/PokemonContexts";
 import { useState } from "react";
+import { capitalize } from "../shared/utils.js"
+import MorePokeInfo from "./MorePokeInfo.jsx";
 
 const IMAGE_URL =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
@@ -10,6 +12,7 @@ function PokemonDisplay({ pokemon }) {
     usePokemonContext();
   const [isShiny, setIsShiny] = useState(false);
   const favorite = isFavorite(pokemon.id);
+  const [modalOpen, setModalOpen]  = useState(false)
 
   function onFavorite(e) {
     e.preventDefault();
@@ -21,11 +24,15 @@ function PokemonDisplay({ pokemon }) {
     ? pokemon.sprites?.front_shiny || `${IMAGE_URL}shiny/${pokemon.id}.png`
     : pokemon.sprites?.front_default || `${IMAGE_URL}${pokemon.id}.png`;
 
+  
+    
+  
+
   return (
     <>
       <div className="pokemon-card">
         <h2 className="pokenum">#{pokemon.id}</h2>
-        <h3>{pokemon.name}</h3>
+        <h3>{capitalize(pokemon.name)}</h3>
         <div className="pokemon-image">
           <img src={imgSprite} alt={pokemon.name} />
           <div className="pokemon-overlay">
@@ -35,6 +42,15 @@ function PokemonDisplay({ pokemon }) {
             >
               ♥
             </button>
+            <div>
+            {/* <button className="moreinfobtn"
+            onClick={()=> {
+              setModalOpen(true);
+            }}>
+              moreinfo
+            </button> */}
+            {/* {modalOpen && <MorePokeInfo closeModal={setModalOpen} />} */}
+            </div>
           </div>
         </div>
 
@@ -46,6 +62,7 @@ function PokemonDisplay({ pokemon }) {
                 <p key={item.type.name}>{item.type.name}</p>
               ))
             : pokemon.type}
+
         </div>
         <button
           className={`shiny-btn ${isShiny ? "isShiny" : ""}`}
@@ -53,6 +70,7 @@ function PokemonDisplay({ pokemon }) {
         >
           <div className="thumb"></div>
         </button>
+        
       </div>
     </>
   );
