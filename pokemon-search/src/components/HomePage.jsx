@@ -98,7 +98,7 @@ function Home() {
     } finally {
       setLoading(false);
     }
-    setSearchPokemon(""); // Clear the search input after search
+    setSearchPokemon("");
   };
 
   function gotoNextPage() {
@@ -119,7 +119,7 @@ function Home() {
       <div className="poke-search">
         <input
           type="text"
-          placeholder="Who's that Pokemon???"
+          placeholder="Search by name or ID"
           className="search-poke"
           value={searchPokemon}
           name="search"

@@ -1,11 +1,9 @@
 body {
-  background-image: url('./images/pokeball_bg.jpeg');
+  background-image: url("./images/pokeball_bg.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;  
-
-  
+  background-attachment: fixed;
 }
 
 .header {
@@ -15,15 +13,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 4dvb; 
+  border-radius: 4dvb;
 }
 
 .navbar {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 200px;
+  width: 100px;
 }
+
+
 
 li a {
   display: block;
@@ -50,4 +50,41 @@ li a:hover {
   justify-content: space-between;
   text-align: center;
   border-radius: 2dvb;
+}
+
+header .pokemon-orange {
+  text-align: center;
+ 
+}
+
+.pokemon-team 
+
+.teamform
+
+h3 {
+  color: rgb(170, 183, 183);
+}
+
+.edtBtn {
+  font-size: 10px;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  background-color: #ae0d0d9b;
+}
+
+.edtBtn:hover {
+  background-color: rgba(76, 74, 74, 0.816);
+  color: white;
+}
+
+.finishBtn {
+    font-size: 10px;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  background-color: #ae0d0d9b;
+}
+
+.finishBtn:hover {
+  background-color: rgba(76, 74, 74, 0.816);
+  color: white;
 }

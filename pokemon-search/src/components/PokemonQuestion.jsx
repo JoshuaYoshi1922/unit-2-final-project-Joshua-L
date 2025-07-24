@@ -15,14 +15,15 @@ function pokemonQuestion() {
     return (
         <div className="pokemon-question">
             <h2>Do you like Pokemon?</h2>
+            {answer === 'yes' && <p> 😁 WooHoo! </p>}
+            {answer === 'no' && <p> 😬 You're No Fun </p>}
+            
             <button className="yes" onClick={clickYes}>yes</button>
             <button className="no" onClick={clickNo}>no</button>
 
-            {answer === 'yes' && <p> 😁 WooHoo! </p>}
-            {answer === 'no' && <p> 😬 You're No Fun </p>}
 
         </div>
     )
 }
 
-export default pokemonQuestion
+export default pokemonQuestion;

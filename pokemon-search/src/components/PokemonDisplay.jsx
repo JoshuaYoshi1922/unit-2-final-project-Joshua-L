@@ -2,7 +2,7 @@ import "../css/PokemonDisplay.css";
 import { usePokemonContext } from "../contexts/PokemonContexts";
 import { useState } from "react";
 import { capitalize } from "../shared/utils.js";
-import MorePokeInfo from "./MorePokeInfo.jsx";
+
 
 const IMAGE_URL =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
@@ -12,7 +12,7 @@ function PokemonDisplay({ pokemon }) {
     usePokemonContext();
   const [isShiny, setIsShiny] = useState(false);
   const favorite = isFavorite(pokemon.id);
-  const [modalOpen, setModalOpen] = useState(false);
+  
 
   function onFavorite(e) {
     e.preventDefault();
@@ -38,15 +38,7 @@ function PokemonDisplay({ pokemon }) {
             >
               ♥
             </button>
-            <div>
-              {/* <button className="moreinfobtn"
-            onClick={()=> {
-              setModalOpen(true);
-            }}>
-              moreinfo
-            </button> */}
-              {/* {modalOpen && <MorePokeInfo closeModal={setModalOpen} />} */}
-            </div>
+
           </div>
         </div>
 
@@ -58,12 +50,14 @@ function PokemonDisplay({ pokemon }) {
             <li className="card-item">Type: {capitalize(pokemon.type)}</li>
           </ul>
         </div>
+        <div className="shinyT">Shiny Toggle
         <button
           className={`shiny-btn ${isShiny ? "isShiny" : ""}`}
           onClick={() => setIsShiny(!isShiny)}
         >
           <div className="thumb"></div>
         </button>
+        </div>
       </div>
     </>
   );
