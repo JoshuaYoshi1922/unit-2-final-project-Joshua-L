@@ -1,7 +1,7 @@
 import "../css/PokemonDisplay.css";
 import { usePokemonContext } from "../contexts/PokemonContexts";
 import { useState } from "react";
-import { capitalize } from "../shared/utils.js"
+import { capitalize } from "../shared/utils.js";
 import MorePokeInfo from "./MorePokeInfo.jsx";
 
 const IMAGE_URL =
@@ -12,7 +12,7 @@ function PokemonDisplay({ pokemon }) {
     usePokemonContext();
   const [isShiny, setIsShiny] = useState(false);
   const favorite = isFavorite(pokemon.id);
-  const [modalOpen, setModalOpen]  = useState(false)
+  const [modalOpen, setModalOpen] = useState(false);
 
   function onFavorite(e) {
     e.preventDefault();
@@ -23,10 +23,6 @@ function PokemonDisplay({ pokemon }) {
   const imgSprite = isShiny
     ? pokemon.sprites?.front_shiny || `${IMAGE_URL}shiny/${pokemon.id}.png`
     : pokemon.sprites?.front_default || `${IMAGE_URL}${pokemon.id}.png`;
-
-  
-    
-  
 
   return (
     <>
@@ -43,26 +39,24 @@ function PokemonDisplay({ pokemon }) {
               ♥
             </button>
             <div>
-            {/* <button className="moreinfobtn"
+              {/* <button className="moreinfobtn"
             onClick={()=> {
               setModalOpen(true);
             }}>
               moreinfo
             </button> */}
-            {/* {modalOpen && <MorePokeInfo closeModal={setModalOpen} />} */}
+              {/* {modalOpen && <MorePokeInfo closeModal={setModalOpen} />} */}
             </div>
           </div>
         </div>
 
         <div className="pokemon-info">
-          <p>Height: {pokemon.height}</p>
-          Type:
-          {Array.isArray(pokemon.types)
-            ? pokemon.types.map((item) => (
-                <p key={item.type.name}>{item.type.name}</p>
-              ))
-            : pokemon.type}
-
+          <ul className="poke-cardinfo">
+            <li className="card-item">Height: {pokemon.height}m</li>
+            <li className="card-item">Weight: {pokemon.weight}kg</li>
+            <li className="card-item">Moves: {capitalize(pokemon.moves)}</li>
+            <li className="card-item">Type: {capitalize(pokemon.type)}</li>
+          </ul>
         </div>
         <button
           className={`shiny-btn ${isShiny ? "isShiny" : ""}`}
@@ -70,7 +64,6 @@ function PokemonDisplay({ pokemon }) {
         >
           <div className="thumb"></div>
         </button>
-        
       </div>
     </>
   );

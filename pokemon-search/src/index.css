@@ -4,6 +4,8 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;  
+
+  
 }
 
 .header {
@@ -37,6 +39,7 @@ li a:hover {
 }
 
 .footer {
+  margin-top: auto;
   position: relative;
   width: 98.5%;
   background-color: rgb(164, 164, 165);
