@@ -1,9 +1,13 @@
-body {
+@media (min-width: 400px) {
+body  {
   background-image: url("./images/pokeball_bg.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+    background-size: contain;
+    background-position: top;
+    padding: 10px;
+    font-size: 16px;
+    min-height: 100vh;
+
+}
 }
 
 .header {
@@ -27,14 +31,15 @@ body {
 
 li a {
   display: block;
-  color: black;
+  border-radius: 4cap;
+  color: rgb(220, 220, 220);
   padding: 8px 16px;
   text-decoration: none;
   text-align: right;
 }
 
 li a:hover {
-  background-color: #ddd;
+  background-color: #c9c9c9;
   color: black;
 }
 
@@ -57,9 +62,6 @@ header .pokemon-orange {
  
 }
 
-.pokemon-team 
-
-.teamform
 
 h3 {
   color: rgb(170, 183, 183);

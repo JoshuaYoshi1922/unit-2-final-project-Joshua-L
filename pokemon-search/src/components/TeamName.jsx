@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function TeamName() {
-  const [pokeTeam, setPokeTeam] = useState("Team Name");
+  const [pokeTeam, setPokeTeam] = useState("Name");
   const [editing, setEditing] = useState(false);
 
   const inputName = (event) => {

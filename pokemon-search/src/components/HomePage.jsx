@@ -149,6 +149,7 @@ function Home() {
           ))
         )}
       </div>
+      
       <div className="next-prev">
         <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
       </div>

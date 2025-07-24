@@ -50,7 +50,7 @@ function PokemonDisplay({ pokemon }) {
             <li className="card-item">Type: {capitalize(pokemon.type)}</li>
           </ul>
         </div>
-        <div className="shinyT">Shiny Toggle
+        <div className="shinyT">Shiny Toggle<br /><br />
         <button
           className={`shiny-btn ${isShiny ? "isShiny" : ""}`}
           onClick={() => setIsShiny(!isShiny)}

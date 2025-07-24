@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import Home from "./components/HomePage";
 import FavPokemon from "./components/FavPokemon";
 import { PokemonProvider } from "./contexts/PokemonContexts";
+import "./App.css";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/favpokemon" element={<FavPokemon />} />
                 <Route path="/about" element={<About />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
             </Router>

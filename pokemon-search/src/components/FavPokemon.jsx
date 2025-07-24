@@ -1,6 +1,7 @@
 import { usePokemonContext } from "../contexts/PokemonContexts";
 import PokemonDisplay from "./PokemonDisplay";
 import "../css/PokemonDisplay.css";
+import { Link } from "react-router";
 
 function FavPokemon() {
   const { favorites } = usePokemonContext();
@@ -21,6 +22,7 @@ function FavPokemon() {
       <div className="favorites-empty">
         <h2>No Favorite Pokemon added</h2>
         <p>Add you favorite Pokemon</p>
+        <Link to="/">Back to Home</Link>
       </div>
     );
   }

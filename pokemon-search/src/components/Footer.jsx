@@ -5,7 +5,7 @@ function Footer() {
     <>
     <div>
       <footer className="footer">
-        <p>&copy;2025 ZBL customs</p>
+        <p>&copy;2025 ZBLcustoms</p>
                 <div className="question">
           <PokemonQuestion />
         </div>
