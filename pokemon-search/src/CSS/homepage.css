@@ -10,10 +10,7 @@
   box-sizing: border-box;
 }
 
-.search-poke {
 
-
-}
 
 .poke-search {
   display: flex;
@@ -23,7 +20,7 @@
   align-items: center;
   padding-top: 1%;
   margin-top: 10;
-  height: ;
+  
 }
 
 .next-prev {

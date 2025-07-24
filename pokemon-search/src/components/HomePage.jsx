@@ -2,8 +2,6 @@ import PokemonDisplay from "./PokemonDisplay";
 import { useState, useEffect } from "react";
 import Pagination from "./pagination";
 import "../css/homepage.css";
-import MorePokeInfo from "./MorePokeInfo";
-import { capitalize } from "../shared/utils";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
@@ -19,10 +17,10 @@ function Home() {
     fetchAllPokemons(`${BASE_URL}${searchPokemon}`);
   }, []);
 
-  async function fetchAllPokemons(url) {
+  async function fetchAllPokemons(BASE_URL) {
     setLoading(true);
     try {
-      const response = await fetch(url);
+      const response = await fetch(BASE_URL);
       const data = await response.json();
 
       setNextUrl(data.next);
@@ -36,6 +34,11 @@ function Home() {
           name: details.name,
           type: details.types.map((t) => t.type.name).join(", "),
           height: details.height,
+          weight: details.weight,
+          moves: details.moves
+            .map((m) => m.move.name)
+            .slice(0, 2)
+            .join(", "),
           sprites: details.sprites.front_default,
         };
       });
@@ -58,18 +61,19 @@ function Home() {
       }
       const data = await response.json();
 
-      // setNextUrl(data.next);
-      // setPrevUrl(data.previous);
-
-      return ([
+      return [
         {
           id: data.id,
           name: data.name,
-          types: data.types,
+          type: data.types.map((t) => t.type.name).join(", "),
           height: data.height,
-          //Add more data here if needed
-        }
-      ])
+          weight: data.weight,
+          moves: data.moves
+            .map((m) => m.move.name)
+            .slice(0, 2)
+            .join(", "),
+        },
+      ];
     } catch (error) {
       console.error("Error fetching", error);
       throw error;
@@ -113,29 +117,28 @@ function Home() {
   return (
     <div className="homePage">
       <div className="poke-search">
-      <input
-        type="text"
-        placeholder="Who's that Pokemon???"
-        className="search-poke"
-        value={searchPokemon}
-        name="search"
-        onKeyDown={pressEnter}
-        onChange={(e) => setSearchPokemon(e.target.value)}
-      />
-      
-      <button
-        onClick={() => handlSearch(searchPokemon)}
-        type="submit"
-        className="search-btn"
-      >
-        Search
-      </button>
+        <input
+          type="text"
+          placeholder="Who's that Pokemon???"
+          className="search-poke"
+          value={searchPokemon}
+          name="search"
+          onKeyDown={pressEnter}
+          onChange={(e) => setSearchPokemon(e.target.value)}
+        />
+
+        <button
+          onClick={() => handlSearch(searchPokemon)}
+          type="submit"
+          className="search-btn"
+        >
+          Search
+        </button>
       </div>
       {error && <div className="error-message">{error}</div>}
 
-
       <div className="next-prev">
-      <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+        <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
       </div>
       <div className="pokemon-grid">
         {loading ? (
@@ -146,8 +149,8 @@ function Home() {
           ))
         )}
       </div>
-        <div className="next-prev">
-      <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+      <div className="next-prev">
+        <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
       </div>
     </div>
   );
