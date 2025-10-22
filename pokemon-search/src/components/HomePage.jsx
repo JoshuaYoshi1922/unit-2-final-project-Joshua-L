@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Pagination from "./pagination";
 import "../css/homepage.css";
 
-const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
+const BASE_URL = "http://localhost:8080/api/pokemon/";
 
 function Home() {
   const [searchPokemon, setSearchPokemon] = useState("");
@@ -72,6 +72,7 @@ function Home() {
             .map((m) => m.move.name)
             .slice(0, 2)
             .join(", "),
+          sprites: data.sprites.front_default,
         },
       ];
     } catch (error) {

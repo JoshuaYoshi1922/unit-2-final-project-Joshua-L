@@ -6,7 +6,9 @@ export const usePokemonContext = () => useContext(PokemonContext);
 
 export const PokemonProvider = ({ children }) => {
   //provide state to any of the components that are wrapped around it
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState([]             );
+
+
 
   useEffect(() => {
     const storedFavs = localStorage.getItem("favorites");
@@ -17,8 +19,13 @@ export const PokemonProvider = ({ children }) => {
   useEffect(() => {
     const storedFavs = localStorage.getItem("favorites");
 
-    if (storedFavs) setFavorites(JSON.parse(storedFavs));
+    if (storedFavs) setFavorites(JSON.parse(storedFavs)); 
   }, []);
+
+  //  useEffect(() => {
+  //   localStorage.setItem('favorites', JSON.stringify(favorites))
+
+  // }, [favorites]);
 
   const addToFavorites = (pokemon) => {
     setFavorites((prev) => [...prev, pokemon]);

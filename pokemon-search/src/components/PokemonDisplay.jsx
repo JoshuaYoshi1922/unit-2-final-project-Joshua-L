@@ -21,8 +21,8 @@ function PokemonDisplay({ pokemon }) {
   }
 
   const imgSprite = isShiny
-    ? pokemon.sprites?.front_shiny || `${IMAGE_URL}shiny/${pokemon.id}.png`
-    : pokemon.sprites?.front_default || `${IMAGE_URL}${pokemon.id}.png`;
+    ? pokemon.sprites.front_shiny || `${IMAGE_URL}shiny/${pokemon.id}.png`
+    : pokemon.sprites.front_default || `${IMAGE_URL}${pokemon.id}.png`;
 
   return (
     <>
