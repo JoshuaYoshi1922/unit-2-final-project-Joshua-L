@@ -3,5 +3,9 @@ package com.example.pokemon_search_backend.Repository;
 import com.example.pokemon_search_backend.Model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRespository  extends JpaRepository<UserModel, Integer> {
+import java.util.Optional;
+
+public interface UserRepository  extends JpaRepository<UserModel, Integer> {
+    Optional<UserModel> findByUsername(String username);
 }
+
