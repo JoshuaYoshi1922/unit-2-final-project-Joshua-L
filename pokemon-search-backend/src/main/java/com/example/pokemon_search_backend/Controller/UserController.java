@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<NewUserDTO> getUserById(@PathVariable int id) {
-        return userService.getUsereById(id)
+        return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

@@ -28,7 +28,7 @@ public class NewUserService {
 
     }
 
-    public Optional<NewUserDTO> getUsereById(int id){
+    public Optional<NewUserDTO> getUserById(int id){
         return userRepository.findById(id)
                 .map(this::convertToDTO);
     }

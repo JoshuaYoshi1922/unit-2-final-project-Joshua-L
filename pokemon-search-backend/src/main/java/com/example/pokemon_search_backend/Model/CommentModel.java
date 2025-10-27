@@ -4,6 +4,7 @@ package com.example.pokemon_search_backend.Model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "pokemon_comments")
@@ -13,15 +14,15 @@ public class CommentModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private NewUserModel user;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "pokemon_id", nullable = false)
-    private PokemonModel pokemon;
+    private UserFavPokemon favPokemon;
 
-    @Column(name = "comment_text", nullable = false, length = 100)
+    @Column(name = "comment_text", nullable = false, length = 1000)
     private String commentText;
 
     @Column(name = "timestamp", nullable = false)
@@ -31,9 +32,9 @@ public class CommentModel {
         this.createdAt = LocalDateTime.now();
     }
 
-    public CommentModel(NewUserModel user, PokemonModel pokemon, String commentText) {
+    public CommentModel(NewUserModel user, UserFavPokemon favPokemon, String commentText) {
         this.user = user;
-        this.pokemon = pokemon;
+        this.favPokemon = favPokemon;
         this.commentText = commentText;
         this.createdAt = LocalDateTime.now();
     }
@@ -53,12 +54,12 @@ public class CommentModel {
         this.user = user;
     }
 
-    public PokemonModel getPokemon() {
-        return pokemon;
+    public UserFavPokemon getFavPokemon() {
+        return favPokemon;
     }
 
-    public void setPokemon(PokemonModel pokemon) {
-        this.pokemon = pokemon;
+    public void setFavPokemon(UserFavPokemon favPokemon) {
+        this.favPokemon = favPokemon;
     }
 
     public String getCommentText() {
@@ -75,5 +76,28 @@ public class CommentModel {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "CommentModel{" +
+                "id=" + id +
+                ", user=" + user +
+                ", favPokemon=" + favPokemon +
+                ", commentText='" + commentText + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CommentModel that = (CommentModel) o;
+        return id == that.id && Objects.equals(user, that.user) && Objects.equals(favPokemon, that.favPokemon) && Objects.equals(commentText, that.commentText) && Objects.equals(createdAt, that.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, favPokemon, commentText, createdAt);
     }
 }

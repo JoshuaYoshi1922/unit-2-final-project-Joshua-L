@@ -13,7 +13,7 @@ public class UserFavPokemon {
 
 
     @Column(name = "pokemon_id", nullable = false)
-    private Integer pokemonId;
+    private int pokemonId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -27,7 +27,7 @@ public class UserFavPokemon {
         this.id = id;
     }
 
-    public Integer getPokemonId() {
+    public int getPokemonId() {
         return pokemonId;
     }
 
