@@ -17,7 +17,7 @@ public class UserFavPokemon {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserModel user;
+    private NewUserModel user;
 
     public int getId() {
         return id;
@@ -35,11 +35,11 @@ public class UserFavPokemon {
         this.pokemonId = pokemonId;
     }
 
-    public UserModel getUser() {
+    public NewUserModel getUser() {
         return user;
     }
 
-    public void setUser(UserModel user) {
+    public void setUser(NewUserModel user) {
         this.user = user;
     }
 }
