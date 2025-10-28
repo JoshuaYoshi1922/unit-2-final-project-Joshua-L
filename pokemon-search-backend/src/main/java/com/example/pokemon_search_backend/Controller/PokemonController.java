@@ -1,8 +1,12 @@
 package com.example.pokemon_search_backend.Controller;
 
 
+import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Service.PokemonService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/pokemon")
@@ -16,12 +20,12 @@ public class PokemonController {
     }
 
     @GetMapping("/{nameOrId}")
-    public Object getPokemon(@PathVariable String nameOrId) {
+    public PokemonModel getPokemon(@PathVariable String nameOrId) {
         return pokemonService.getPokemon(nameOrId);
     }
 
     @GetMapping("/")
-    public Object getPokemonList() {
+    public List<PokemonModel> getPokemonList() {
         return pokemonService.getPokemonList();
     }
 }
