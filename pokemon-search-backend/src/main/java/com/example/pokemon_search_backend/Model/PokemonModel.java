@@ -102,13 +102,13 @@ public class PokemonModel {
         private String name;
 
 
-        // Added constructor for convenience
+
         public Type2(String name) {
             this.name = name;
 
         }
 
-        // Added default constructor
+
         public Type2() {
         }
 

@@ -3,6 +3,7 @@ package com.example.pokemon_search_backend.Controller;
 
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Service.PokemonService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class PokemonController {
     }
 
     @GetMapping("/")
-    public List<PokemonModel> getPokemonList() {
+    public List<PokemonModel> getPokemonList(){
         return pokemonService.getPokemonList();
     }
 }

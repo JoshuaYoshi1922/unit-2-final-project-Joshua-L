@@ -51,29 +51,24 @@ public class PokemonService {
 
         try {
             JsonNode root = objectMapper.readTree(response);
-            PokemonModel pokemon = new PokemonModel();
-            pokemon.setId(root.path("id").asInt());
-            pokemon.setName(root.path("name").asText());
-            pokemon.base_experience = root.path("base_experience").asInt();
-            pokemon.height = root.path("height").asInt();
-            pokemon.weight = root.path("weight").asInt();
+            JsonNode results = root.path("results");
 
-            // Extract types from the API response
-            JsonNode typesNode = root.path("types");
-            if (typesNode.isArray()) {
-                List<PokemonModel.Type> typesList = new ArrayList<>();
-                for (JsonNode typeNode : typesNode) {
-                    JsonNode typeInfo = typeNode.path("type");
-                    String typeName = typeInfo.path("name").asText();
-                    typesList.add(new PokemonModel.Type(typeName));
+            if (results.isArray()) {
+                for (JsonNode pokemonNode : results) {
+                    String pokemonName = pokemonNode.path("name").asText();
+                    PokemonModel pokemon = getPokemon(pokemonName);
+                    if (pokemon != null) {
+                        pokemonList.add(pokemon);
+                    }
                 }
-                pokemon.setTypes(typesList);
             }
 
             return pokemonList;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return pokemonList;
+
+
         }
-    }
 }
+    }
