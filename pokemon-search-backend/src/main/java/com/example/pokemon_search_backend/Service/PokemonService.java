@@ -45,6 +45,7 @@ public class PokemonService {
             return null;
         }
     }
+
     public List<PokemonModel> getPokemonList() {
         String response = restTemplate.getForObject(url, String.class);
         List<PokemonModel> pokemonList = new ArrayList<>();
@@ -70,5 +71,6 @@ public class PokemonService {
 
 
         }
-}
     }
+
+}
