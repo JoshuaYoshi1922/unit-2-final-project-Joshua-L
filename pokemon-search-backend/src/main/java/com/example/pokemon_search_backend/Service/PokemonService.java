@@ -38,6 +38,20 @@ public class PokemonService {
                 }
                 pokemon.setTypes(typesList);
             }
+            // Extract moves from the API response
+            JsonNode movesNode = root.path("moves");
+            if (movesNode.isArray()) {
+                List<PokemonModel.Move> movesList = new ArrayList<>();
+                int moveCount = 0;
+                for (JsonNode moveNode : movesNode) {
+                    if (moveCount >= 3 ) break; //
+                    JsonNode moveInfo = moveNode.path("move");
+                    String moveName = moveInfo.path("name").asText();
+                    movesList.add(new PokemonModel.Move(moveName));
+                    moveCount++;
+                }
+                pokemon.setMoves(movesList);
+            }
 
             return pokemon;
         } catch (Exception e) {

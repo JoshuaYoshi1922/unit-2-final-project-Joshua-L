@@ -1,10 +1,12 @@
 package com.example.pokemon_search_backend.Service;
 
 import com.example.pokemon_search_backend.Model.CommentModel;
-import com.example.pokemon_search_backend.Model.NewUserModel;
+
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
+import com.example.pokemon_search_backend.Model.UserModel;
 import com.example.pokemon_search_backend.Repository.CommentRepository;
-import com.example.pokemon_search_backend.Repository.UserFavPokemonRepository;
+import com.example.pokemon_search_backend.Repository.UserFavPokemonRepo;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +16,15 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserFavPokemonRepository userFavPokemonRepository;
+    private UserFavPokemonRepo userFavPokemonRepo;
 
-    public CommentService(CommentRepository commentRepository, UserFavPokemonRepository userFavPokemonRepository) {
+    public CommentService(CommentRepository commentRepository, UserFavPokemonRepo userFavPokemonRepository) {
         this.commentRepository = commentRepository;
-        this.userFavPokemonRepository = userFavPokemonRepository;
+        this.userFavPokemonRepo = userFavPokemonRepo;
     }
 
-    public CommentModel createComment(NewUserModel user, int pokemonId, String commentText) {
-        Optional<UserFavPokemon> userFavPokemon = userFavPokemonRepository.findByUserIdAndPokemonId(user.getId(), pokemonId);
+    public CommentModel createComment(UserModel user, int pokemonId, String commentText) {
+        Optional<UserFavPokemon> userFavPokemon = userFavPokemonRepo.findByUserIdAndPokemonId(user.getId(), pokemonId);
 
         if(userFavPokemon.isPresent()) {
             CommentModel comment = new CommentModel(user, userFavPokemon.get(), commentText);

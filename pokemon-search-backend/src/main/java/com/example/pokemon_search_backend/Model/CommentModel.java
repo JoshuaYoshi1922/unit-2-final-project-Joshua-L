@@ -16,7 +16,7 @@ public class CommentModel {
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private NewUserModel user;
+    private UserModel user;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "pokemon_id", nullable = false)
@@ -32,7 +32,7 @@ public class CommentModel {
         this.createdAt = LocalDateTime.now();
     }
 
-    public CommentModel(NewUserModel user, UserFavPokemon favPokemon, String commentText) {
+    public CommentModel(UserModel user, UserFavPokemon favPokemon, String commentText) {
         this.user = user;
         this.favPokemon = favPokemon;
         this.commentText = commentText;
@@ -46,11 +46,11 @@ public class CommentModel {
         this.id = id;
     }
 
-    public NewUserModel getUser() {
+    public UserModel getUser() {
         return user;
     }
 
-    public void setUser(NewUserModel user) {
+    public void setUser(UserModel user) {
         this.user = user;
     }
 

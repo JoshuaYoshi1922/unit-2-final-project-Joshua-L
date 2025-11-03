@@ -1,8 +1,9 @@
 package com.example.pokemon_search_backend.Controller;
 
 
-import com.example.pokemon_search_backend.DTO.NewUserDTO;
-import com.example.pokemon_search_backend.Service.NewUserService;
+
+import com.example.pokemon_search_backend.DTO.UserDTO;
+import com.example.pokemon_search_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,29 +16,29 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
-    private final NewUserService userService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(NewUserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @RequestMapping
-    public ResponseEntity<List<NewUserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewUserDTO> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<NewUserDTO> registerUser(@RequestBody NewUserDTO newUserDTO) {
+    public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
         try {
-            NewUserDTO createdUser = userService.createUser(newUserDTO);
+            UserDTO createdUser = userService.createUser(userDTO);
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NewUserDTO> updateUser(@PathVariable int id, @RequestBody NewUserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         return userService.updateUser(id, userDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

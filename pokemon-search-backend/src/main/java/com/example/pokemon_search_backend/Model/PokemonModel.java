@@ -2,30 +2,37 @@ package com.example.pokemon_search_backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-
+@Entity
+@Table(name = "pokemon")
 public class PokemonModel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private ArrayList<Type> types;
     public int base_experience;
     public int height;
     public int weight;
+    private ArrayList<Move> moves;
 
 
-    public PokemonModel(int id, String name, ArrayList<Type> types, int base_experience, int height, int weight) {
+    public PokemonModel(int id, String name, ArrayList<Type> types, int base_experience, int height, int weight, ArrayList<Move> moves) {
         this.id = id;
         this.name = name;
         this.types = types;
         this.base_experience = base_experience;
         this.height = height;
         this.weight = weight;
+        this.moves = moves;
     }
 
     public PokemonModel() {
@@ -79,6 +86,14 @@ public class PokemonModel {
         this.weight = weight;
     }
 
+    public List<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(List<Move> movesList) {
+        this.moves = (ArrayList<Move>) movesList;
+    }
+
     public static class Type {
 
         private String name; // Added name field based on constructor usage
@@ -102,7 +117,6 @@ public class PokemonModel {
         private String name;
 
 
-
         public Type2(String name) {
             this.name = name;
 
@@ -120,31 +134,76 @@ public class PokemonModel {
         public void setName(String name) {
             this.name = name;
         }
+    }
+
+        public static class Move {
+
+            private String name; // Added name field based on constructor usage
+
+            public Move(String moveName) {
+                this.name = moveName; // Initialize the name field
+            }
+            public Move() {
+            }
+
+            public String getName() {
+                return this.name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+        }
+
+        public static class Move2 {
+            private String name;
+
+
+
+            public Move2(String name) {
+                this.name = name;
+
+            }
+
+
+            public Move2() {
+            }
+
+            @JsonProperty("name")
+            public String getName() {
+                return this.name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
 
 
     }
 
+
     @Override
     public String toString() {
-        return "Pokemon{" +
+        return "PokemonModel{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", types=" + types +
                 ", base_experience=" + base_experience +
                 ", height=" + height +
                 ", weight=" + weight +
+                ", moves=" + moves +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        PokemonModel pokemon = (PokemonModel) o;
-        return id == pokemon.id && base_experience == pokemon.base_experience && height == pokemon.height && weight == pokemon.weight && Objects.equals(name, pokemon.name) && Objects.equals(types, pokemon.types);
+        PokemonModel that = (PokemonModel) o;
+        return id == that.id && base_experience == that.base_experience && height == that.height && weight == that.weight && Objects.equals(name, that.name) && Objects.equals(types, that.types) && Objects.equals(moves, that.moves);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, types, base_experience, height, weight);
+        return Objects.hash(id, name, types, base_experience, height, weight, moves);
     }
 }

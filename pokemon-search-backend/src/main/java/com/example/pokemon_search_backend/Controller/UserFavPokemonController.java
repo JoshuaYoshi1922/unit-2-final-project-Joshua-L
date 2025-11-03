@@ -28,7 +28,7 @@ public class UserFavPokemonController {
         return ResponseEntity.ok(favorites);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<UserFavPokemonDTO> addFavorite(@RequestBody UserFavPokemonDTO favPokemonDTO) {
         UserFavPokemonDTO added = favPokemonService.addFavorite(favPokemonDTO);
         return new ResponseEntity<>(added, HttpStatus.CREATED);

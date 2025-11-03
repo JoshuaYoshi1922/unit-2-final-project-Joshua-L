@@ -1,8 +1,10 @@
 package com.example.pokemon_search_backend.Service;
 
 
-import com.example.pokemon_search_backend.DTO.NewUserDTO;
-import com.example.pokemon_search_backend.Model.NewUserModel;
+
+import com.example.pokemon_search_backend.DTO.UserDTO;
+
+import com.example.pokemon_search_backend.Model.UserModel;
 import com.example.pokemon_search_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +14,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class NewUserService {
+public class UserService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public NewUserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
-    public List<NewUserDTO> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
@@ -28,49 +30,51 @@ public class NewUserService {
 
     }
 
-    public Optional<NewUserDTO> getUserById(int id){
+    public Optional<UserDTO> getUserById(int id){
         return userRepository.findById(id)
                 .map(this::convertToDTO);
     }
 
-    public Optional<NewUserDTO> getUserByUsername(String username) {
+    public Optional<UserDTO> getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(this::convertToDTO);
     }
 
-    public NewUserDTO createUser(NewUserDTO newUserDTO) {
-        if(userRepository.existsByUsername(newUserDTO.getUsername())) {
+    public UserDTO createUser(UserDTO userDTO) {
+        if(userRepository.existsByUsername(userDTO.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
 
-        NewUserModel newUserModel = new NewUserModel(
-        newUserDTO.getUsername(),
-        newUserDTO.getPassword(),
-        newUserDTO.getEmail()
+        UserModel userModel = new UserModel(
+                userDTO.getUsername(),
+                userDTO.getPassword(),
+                userDTO.getEmail(),
+                userDTO.getFavoritePokemons()
         );
 
-        NewUserModel savedUser = userRepository.save(newUserModel);
+        UserModel savedUser = userRepository.save(userModel);
         return convertToDTO(savedUser);
     }
 
-    public Optional<NewUserDTO> updateUser(int id, NewUserDTO newUserDTO) {
+    public Optional<UserDTO> updateUser(int id, UserDTO userDTO) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    existingUser.setUsername(newUserDTO.getUsername());
-                    existingUser.setPassword(newUserDTO.getPassword());
-                    existingUser.setEmail(newUserDTO.getEmail());
+                    existingUser.setUsername(userDTO.getUsername());
+                    existingUser.setEmail(userDTO.getEmail());
+                    existingUser.setFavoritePokemons(userDTO.getFavoritePokemons());
                     return convertToDTO(userRepository.save(existingUser));
                 });
     }
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
-    private NewUserDTO convertToDTO(NewUserModel userModel) {
-        return new NewUserDTO(
+    private UserDTO convertToDTO(UserModel userModel) {
+        return new UserDTO(
                 userModel.getId(),
                 userModel.getUsername(),
-                userModel.getPassword(),
-                userModel.getEmail()
+//                userModel.getPassword(),
+                userModel.getEmail(),
+                userModel.getFavoritePokemons()
         );
     }
 }
