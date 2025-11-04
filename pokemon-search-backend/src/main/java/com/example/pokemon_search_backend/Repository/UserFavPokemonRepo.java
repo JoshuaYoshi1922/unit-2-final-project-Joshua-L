@@ -9,8 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface UserFavPokemonRepo extends JpaRepository<UserFavPokemon, Long> {
-    List<UserFavPokemon> findByUserId(int userId);
-    boolean existsByUserIdAndPokemonId(int userId, int pokemonId);
+    List<UserFavPokemon> findByUser_Id(int userId);
+    boolean existsByUser_IdAndPokemonId(int userId, int pokemonId);
 
-    Optional<UserFavPokemon> findByUserIdAndPokemonId(int userId, int pokemonId);
+    Optional<UserFavPokemon> findByUser_IdAndPokemonId(int userId, int pokemonId);
 }

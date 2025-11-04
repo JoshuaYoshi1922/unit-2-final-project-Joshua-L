@@ -2,6 +2,7 @@ package com.example.pokemon_search_backend.DTO;
 
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,15 +13,9 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private Set<UserFavPokemon> favoritePokemons;
+    private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
 
-    public UserDTO(int id, String username, String email, Set<UserFavPokemon> favoritePokemons) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.favoritePokemons = favoritePokemons;
-    }
+
 
 
 
@@ -49,10 +44,10 @@ public class UserDTO {
         this.email = email;
     }
 
-    public Set<UserFavPokemon> getFavoritePokemons() {
+    public List<UserFavPokemon> getFavoritePokemons() {
         return favoritePokemons;
     }
-    public void setFavoritePokemons(Set<UserFavPokemon> favoritePokemons) {
+    public void setFavoritePokemons(List<UserFavPokemon> favoritePokemons) {
         this.favoritePokemons = favoritePokemons;
     }
 

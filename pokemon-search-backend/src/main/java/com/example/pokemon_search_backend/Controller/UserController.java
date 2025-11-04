@@ -3,6 +3,7 @@ package com.example.pokemon_search_backend.Controller;
 
 
 import com.example.pokemon_search_backend.DTO.UserDTO;
+import com.example.pokemon_search_backend.Model.UserModel;
 import com.example.pokemon_search_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,21 +25,21 @@ public class UserController {
     }
 
     @RequestMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserModel>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserModel> getUserById(@PathVariable int id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserModel> registerUser(@RequestBody UserDTO userDTO) {
         try {
-            UserDTO createdUser = userService.createUser(userDTO);
+            UserModel createdUser = userService.createUser(userDTO);
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
@@ -46,10 +47,12 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
-        return userService.updateUser(id, userDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserModel> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
+        UserModel response = userService.updateUser(id, userDTO);
+        if (response != null) {
+            return ResponseEntity.ok(response);
+        }
+        return null;
     }
 
     @DeleteMapping("/{id}")

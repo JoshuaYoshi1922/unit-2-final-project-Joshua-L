@@ -11,16 +11,7 @@ public class CommentDTO {
     private String comment;
     private LocalDateTime createdAt;
 
-    public CommentDTO() {}
 
-    public CommentDTO(int id, int userId, String username, int pokemonId, String comment, LocalDateTime createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.username = username;
-        this.pokemonId = pokemonId;
-        this.comment = comment;
-        this.createdAt = createdAt;
-    }
 
     public int getId() {
         return id;

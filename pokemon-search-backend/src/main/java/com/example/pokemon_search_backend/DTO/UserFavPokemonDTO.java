@@ -1,35 +1,29 @@
 package com.example.pokemon_search_backend.DTO;
 
+import com.example.pokemon_search_backend.Model.PokemonModel;
+import com.example.pokemon_search_backend.Model.UserFavPokemon;
+import com.example.pokemon_search_backend.Model.UserModel;
+
+import java.util.Set;
+
 public class UserFavPokemonDTO {
     private int id;
-    private int userId;
     private int pokemonId;
+    private int userId;
 
-    public UserFavPokemonDTO() {
+
+    public int getPokemonId() {
+        return pokemonId;
     }
 
-    public UserFavPokemonDTO(int id, int userId, int pokemonId) {
-        this.id = id;
-        this.userId = userId;
+    public void setPokemonId(int pokemonId) {
         this.pokemonId = pokemonId;
     }
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
     public int getUserId() {
         return userId;
     }
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-    public int getPokemonId() {
-        return pokemonId;
-    }
-    public void setPokemonId(int pokemonId) {
-        this.pokemonId = pokemonId;
     }
 }

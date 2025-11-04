@@ -2,6 +2,7 @@ package com.example.pokemon_search_backend.Controller;
 
 
 import com.example.pokemon_search_backend.DTO.UserFavPokemonDTO;
+import com.example.pokemon_search_backend.Model.UserFavPokemon;
 import com.example.pokemon_search_backend.Service.UserFavPokemonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +24,14 @@ public class UserFavPokemonController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserFavPokemonDTO>> getUserFavorites(@PathVariable int userId) {
-        List<UserFavPokemonDTO> favorites = favPokemonService.getFavoritesByUserId(userId);
+    public ResponseEntity<List<UserFavPokemon>> getUserFavorites(@PathVariable int userId) {
+        List<UserFavPokemon> favorites = favPokemonService.getFavoritesByUserId(userId);
         return ResponseEntity.ok(favorites);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UserFavPokemonDTO> addFavorite(@RequestBody UserFavPokemonDTO favPokemonDTO) {
-        UserFavPokemonDTO added = favPokemonService.addFavorite(favPokemonDTO);
+    public ResponseEntity<UserFavPokemon> addFavorite(@RequestBody UserFavPokemonDTO favPokemonDTO) {
+        UserFavPokemon added = favPokemonService.addFavorite(favPokemonDTO);
         return new ResponseEntity<>(added, HttpStatus.CREATED);
     }
 

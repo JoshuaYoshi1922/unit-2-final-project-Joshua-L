@@ -2,6 +2,7 @@ package com.example.pokemon_search_backend.Service;
 
 
 import com.example.pokemon_search_backend.DTO.UserFavPokemonDTO;
+import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
 
 
@@ -11,6 +12,7 @@ import com.example.pokemon_search_backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,40 +29,38 @@ public class UserFavPokemonService {
         this.userRepository = userRepository;
     }
 
-    public List<UserFavPokemonDTO> getFavoritesByUserId(int userId) {
-        List<UserFavPokemon> favorites = favPokemonRepo.findByUserId(userId);
+    public List<UserFavPokemon> getFavoritesByUserId(int userId) {
+        List<UserFavPokemon> favorites = favPokemonRepo.findByUser_Id(userId);
+        return favPokemonRepo.findByUser_Id(userId);
 
-        return favorites.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+
     }
 
-    public UserFavPokemonDTO addFavorite(UserFavPokemonDTO favPokemonDTO) {
-        Optional<UserFavPokemon> existingFavorite = favPokemonRepo.findByUserIdAndPokemonId(favPokemonDTO.getUserId(), favPokemonDTO.getPokemonId());
 
-        if(existingFavorite.isPresent()) {
-            return convertToDTO(existingFavorite.get());
+    public UserFavPokemon addFavorite(UserFavPokemonDTO favPokemonDTO) {
+        UserModel user = userRepository.findById(favPokemonDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + favPokemonDTO.getUserId()));
+
+        boolean exists = user.getFavoritePokemons()
+                .stream()
+                .anyMatch(fav -> fav.getPokemonId() == favPokemonDTO.getPokemonId());
+
+        if (exists) {
+            throw new RuntimeException("Favorite already exists for this user and pokemon");
         }
 
-        UserModel user = userRepository.findById(favPokemonDTO.getUserId())
-                .orElseThrow(()-> new RuntimeException("User not found with ID: " + favPokemonDTO.getUserId()));
+        UserFavPokemon favPokemon = new UserFavPokemon();
+        favPokemon.setUser(user);
+        favPokemon.setPokemonId(favPokemonDTO.getPokemonId());
 
-        UserFavPokemon newFavorite = new UserFavPokemon();
-        newFavorite.setPokemonId(favPokemonDTO.getPokemonId());
-        newFavorite.setUser(user);
-
-        UserFavPokemon saved = favPokemonRepo.save(newFavorite);
-        return convertToDTO(saved);
+        return favPokemonRepo.save(favPokemon);
     }
+
 
     public void removeFavorite(int userId, int pokemonId) {
-        Optional<UserFavPokemon> favorite = favPokemonRepo.findByUserIdAndPokemonId(userId, pokemonId);
+        Optional<UserFavPokemon> favorite = favPokemonRepo.findByUser_IdAndPokemonId(userId, pokemonId);
 
         favorite.ifPresent(favPokemonRepo::delete);
-    }
-
-    private UserFavPokemonDTO convertToDTO(UserFavPokemon entity) {
-        return new UserFavPokemonDTO(entity.getId(), entity.getUser().getId(), entity.getPokemonId());
     }
 
 

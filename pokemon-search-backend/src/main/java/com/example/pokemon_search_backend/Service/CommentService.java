@@ -24,7 +24,7 @@ public class CommentService {
     }
 
     public CommentModel createComment(UserModel user, int pokemonId, String commentText) {
-        Optional<UserFavPokemon> userFavPokemon = userFavPokemonRepo.findByUserIdAndPokemonId(user.getId(), pokemonId);
+        Optional<UserFavPokemon> userFavPokemon = userFavPokemonRepo.findByUser_IdAndPokemonId(user.getId(), pokemonId);
 
         if(userFavPokemon.isPresent()) {
             CommentModel comment = new CommentModel(user, userFavPokemon.get(), commentText);

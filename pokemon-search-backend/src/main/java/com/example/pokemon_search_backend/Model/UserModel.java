@@ -1,6 +1,8 @@
 package com.example.pokemon_search_backend.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
@@ -14,21 +16,22 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String username;
-    private String password;
     private String email;
+    private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<UserFavPokemon> favoritePokemons = new HashSet<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
 
-    public UserModel(String username, String password, String email, Set<UserFavPokemon> favoritePokemons) {
+    public UserModel() {
+    }
+
+    public UserModel(String username, String password, String email, List<UserFavPokemon> favoritePokemons) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.favoritePokemons = favoritePokemons;
     }
-
-    public UserModel() {}
-
 
 
     public int getId() {
@@ -62,10 +65,12 @@ public class UserModel {
     public void setEmail(String email) {
         this.email = email;
     }
-    public Set<UserFavPokemon> getFavoritePokemons() {
+
+    public List<UserFavPokemon> getFavoritePokemons() {
         return favoritePokemons;
     }
-    public void setFavoritePokemons(Set<UserFavPokemon> favoritePokemons) {
+
+    public void setFavoritePokemons(List<UserFavPokemon> favoritePokemons) {
         this.favoritePokemons = favoritePokemons;
     }
 
