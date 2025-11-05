@@ -3,11 +3,11 @@ package com.example.pokemon_search_backend.Model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -24,8 +24,11 @@ public class PokemonModel {
     public int weight;
     private ArrayList<Move> moves;
 
+    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentModel> comments = new ArrayList<>();
 
-    public PokemonModel(int id, String name, ArrayList<Type> types, int base_experience, int height, int weight, ArrayList<Move> moves) {
+
+    public PokemonModel(int id, String name, ArrayList<Type> types, int base_experience, int height, int weight, ArrayList<Move> moves, ArrayList<CommentModel> comments) {
         this.id = id;
         this.name = name;
         this.types = types;
@@ -33,6 +36,7 @@ public class PokemonModel {
         this.height = height;
         this.weight = weight;
         this.moves = moves;
+        this.comments = comments;
     }
 
     public PokemonModel() {
@@ -54,11 +58,11 @@ public class PokemonModel {
         this.name = name;
     }
 
-    public List<Type> getTypes() {
+    public ArrayList<Type> getTypes() {
         return types;
     }
 
-    public void setTypes(List<Type> types) {
+    public void setTypes(ArrayList<Type> types) {
         this.types = (ArrayList<Type>) types;
     }
 
@@ -180,30 +184,23 @@ public class PokemonModel {
 
 
     }
-
-
-    @Override
-    public String toString() {
-        return "PokemonModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", types=" + types +
-                ", base_experience=" + base_experience +
-                ", height=" + height +
-                ", weight=" + weight +
-                ", moves=" + moves +
-                '}';
+    public List<CommentModel> getComments() {
+        return comments;
     }
+    public void setComments(List<CommentModel> comments) {
+        this.comments = comments;
+    }
+
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PokemonModel that = (PokemonModel) o;
-        return id == that.id && base_experience == that.base_experience && height == that.height && weight == that.weight && Objects.equals(name, that.name) && Objects.equals(types, that.types) && Objects.equals(moves, that.moves);
+        return id == that.id && base_experience == that.base_experience && height == that.height && weight == that.weight && Objects.equals(name, that.name) && Objects.equals(types, that.types) && Objects.equals(moves, that.moves) && Objects.equals(comments, that.comments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, types, base_experience, height, weight, moves);
+        return Objects.hash(id, name, types, base_experience, height, weight, moves, comments);
     }
 }

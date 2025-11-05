@@ -1,13 +1,18 @@
 package com.example.pokemon_search_backend.Service;
 
+
 import com.example.pokemon_search_backend.Model.PokemonModel;
+import com.example.pokemon_search_backend.Repository.PokemonRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PokemonService {
@@ -30,7 +35,7 @@ public class PokemonService {
             // Extract types from the API response
             JsonNode typesNode = root.path("types");
             if (typesNode.isArray()) {
-                List<PokemonModel.Type> typesList = new ArrayList<>();
+                ArrayList<PokemonModel.Type> typesList = new ArrayList<>();
                 for (JsonNode typeNode : typesNode) {
                     JsonNode typeInfo = typeNode.path("type");
                     String typeName = typeInfo.path("name").asText();

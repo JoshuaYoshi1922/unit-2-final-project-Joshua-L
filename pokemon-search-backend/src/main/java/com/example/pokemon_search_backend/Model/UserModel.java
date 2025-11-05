@@ -1,10 +1,8 @@
 package com.example.pokemon_search_backend.Model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.*;
 
@@ -23,23 +21,23 @@ public class UserModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
 
-    public UserModel() {
-    }
+//    @OneToOne
+//    @JoinColumn(name = "user", nullable = false, unique = true)
+//    private TeamModel team;
 
-    public UserModel(String username, String password, String email, List<UserFavPokemon> favoritePokemons) {
+
+
+    public UserModel(String username, String email, String password, List<UserFavPokemon> favoritePokemons) {
         this.username = username;
-        this.password = password;
         this.email = email;
+        this.password = password;
         this.favoritePokemons = favoritePokemons;
+//        this.team = team;
+
     }
 
-
-    public int getId() {
+    public int getId(int userId) {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -50,20 +48,20 @@ public class UserModel {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<UserFavPokemon> getFavoritePokemons() {
@@ -74,16 +72,24 @@ public class UserModel {
         this.favoritePokemons = favoritePokemons;
     }
 
+//    public TeamModel getTeam() {
+//        return team;
+//    }
+//    public void setTeam(TeamModel team) {
+//        this.team = team;
+//    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         UserModel userModel = (UserModel) o;
-        return id == userModel.id && Objects.equals(username, userModel.username) && Objects.equals(password, userModel.password) && Objects.equals(email, userModel.email) && Objects.equals(favoritePokemons, userModel.favoritePokemons);
+        return id == userModel.id && Objects.equals(username, userModel.username) && Objects.equals(email, userModel.email) && Objects.equals(password, userModel.password) && Objects.equals(favoritePokemons, userModel.favoritePokemons);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email, favoritePokemons);
+        return Objects.hash(id, username, email, password, favoritePokemons);
     }
 
     @Override
@@ -91,9 +97,10 @@ public class UserModel {
         return "UserModel{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", favoritePokemons=" + favoritePokemons +
+
                 '}';
     }
 }

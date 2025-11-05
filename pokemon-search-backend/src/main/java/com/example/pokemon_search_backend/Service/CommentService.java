@@ -1,12 +1,11 @@
 package com.example.pokemon_search_backend.Service;
 
+import com.example.pokemon_search_backend.DTO.CommentDTO;
 import com.example.pokemon_search_backend.Model.CommentModel;
-
-import com.example.pokemon_search_backend.Model.UserFavPokemon;
-import com.example.pokemon_search_backend.Model.UserModel;
-import com.example.pokemon_search_backend.Repository.CommentRepository;
-import com.example.pokemon_search_backend.Repository.UserFavPokemonRepo;
-
+import com.example.pokemon_search_backend.Model.PokemonModel;
+import com.example.pokemon_search_backend.Repository.CommentRepo;
+import com.example.pokemon_search_backend.Repository.PokemonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,46 +13,84 @@ import java.util.Optional;
 
 @Service
 public class CommentService {
+    private PokemonRepository pokemonRepository;
+    private CommentRepo commentRepo;
 
-    private final CommentRepository commentRepository;
-    private UserFavPokemonRepo userFavPokemonRepo;
+    @Autowired
+    public CommentService(PokemonRepository pokemonRepository, CommentRepo commentRepo) {
+        this.pokemonRepository = pokemonRepository;
+        this.commentRepo = commentRepo;
 
-    public CommentService(CommentRepository commentRepository, UserFavPokemonRepo userFavPokemonRepository) {
-        this.commentRepository = commentRepository;
-        this.userFavPokemonRepo = userFavPokemonRepo;
     }
 
-    public CommentModel createComment(UserModel user, int pokemonId, String commentText) {
-        Optional<UserFavPokemon> userFavPokemon = userFavPokemonRepo.findByUser_IdAndPokemonId(user.getId(), pokemonId);
+    public CommentDTO createComment(int pokemonId, CommentDTO commentDTO) {
+        CommentModel commentModel = mapToEntity(commentDTO);
 
-        if(userFavPokemon.isPresent()) {
-            CommentModel comment = new CommentModel(user, userFavPokemon.get(), commentText);
-            return commentRepository.save(comment);
+        PokemonModel pokemon = pokemonRepository.findById(pokemonId)
+                .orElseThrow(() -> new RuntimeException("Pokemon not found with ID: " + pokemonId));
+
+        commentModel.setPokemon(pokemon);
+
+        CommentModel newComment = commentRepo.save(commentModel);
+
+        return mapToDto(newComment);
+    }
+
+    public List<CommentDTO> getCommentsByPokemonId(int pokemonId) {
+        List<CommentModel> comments = commentRepo.findByPokemonId(pokemonId);
+        return comments.stream().map(this::mapToDto).toList();
+    }
+
+    public Optional<CommentDTO> getCommentById(int pokemonId, int commentId) {
+        PokemonModel pokemon = pokemonRepository.findById(pokemonId)
+                .orElseThrow(() -> new RuntimeException("Pokemon not found with ID: " + pokemonId));
+        CommentModel comment = commentRepo.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found with ID: " + commentId));
+        if (comment.getPokemon().getId() != pokemon.getId()) {
+            throw new RuntimeException("Comment does not belong to the specified Pokemon");
         }
-        throw new RuntimeException("Favorite Pokemon not found for user ID");
+        return Optional.of(mapToDto(comment));
     }
 
-    public List<CommentModel> getCommentsByPokemonId(int pokemonId) {
-        return commentRepository.findByFavPokemon_PokemonId(pokemonId);
+    public CommentDTO updateComment(int pokemonId, int commentId, CommentDTO commentDTO) {
+        PokemonModel pokemon = pokemonRepository.findById(pokemonId)
+                .orElseThrow(() -> new RuntimeException("Pokemon not found with ID: " + pokemonId));
+        CommentModel existingComment = commentRepo.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found with ID: " + commentId));
+        if (existingComment.getPokemon().getId() != pokemon.getId()) {
+            throw new RuntimeException("Comment does not belong to the specified Pokemon");
+    }
+        existingComment.setTitle(commentDTO.getTitle());
+        existingComment.setComment(commentDTO.getComment());
+
+        CommentModel updatedComment = commentRepo.save(existingComment);
+        return mapToDto(updatedComment);
     }
 
-    public List<CommentModel> getCommentsByUserId(int userId) {
-        return commentRepository.findByUser_Id(userId);
+    public void deleteComment(int pokemonId, int commentId) {
+        PokemonModel pokemon = pokemonRepository.findById(pokemonId)
+                .orElseThrow(() -> new RuntimeException("Pokemon not found with ID: " + pokemonId));
+        CommentModel existingComment = commentRepo.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found with ID: " + commentId));
+        if (existingComment.getPokemon().getId() != pokemon.getId()) {
+            throw new RuntimeException("Comment does not belong to the specified Pokemon");
+    }
+        commentRepo.delete(existingComment);
     }
 
-    public CommentModel updateComment(int commentId, String commentText) {
-        Optional<CommentModel> existingComment = commentRepository.findById(commentId);
 
-        if(existingComment.isPresent()) {
-            CommentModel comment = existingComment.get();
-            comment.setCommentText(commentText);
-            return commentRepository.save(comment);
-        }
-        throw new RuntimeException("Comment not found with ID: ");
+    private CommentDTO mapToDto(CommentModel commentModel){
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setId(commentModel.getId());
+        commentDTO.setTitle(commentModel.getTitle());
+        commentDTO.setComment(commentModel.getComment());
+        return commentDTO;
     }
-
-    public void deleteComment(int commentId) {
-        commentRepository.deleteById(commentId);
+    private CommentModel mapToEntity(CommentDTO commentDTO){
+        CommentModel commentModel = new CommentModel();
+        commentModel.setTitle(commentDTO.getTitle());
+        commentModel.setComment(commentDTO.getComment());
+        commentModel.setComment(commentDTO.getComment());
+        return commentModel;
     }
-
 }

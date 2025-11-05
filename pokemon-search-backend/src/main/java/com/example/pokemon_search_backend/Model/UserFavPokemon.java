@@ -25,30 +25,16 @@ public class UserFavPokemon {
     private UserModel user;
 
 
+
+
     public UserFavPokemon(int pokemonId, UserModel user) {
         this.pokemonId = pokemonId;
         this.user = user;
-
     }
-
-    public UserFavPokemon() {
-    }
+    public UserFavPokemon() {}
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-
-    public int getPokemonId() {
-        return pokemonId;
-    }
-
-    public void setPokemonId(int pokemonId) {
-        this.pokemonId = pokemonId;
     }
 
     public UserModel getUser() {
@@ -59,12 +45,13 @@ public class UserFavPokemon {
         this.user = user;
     }
 
-    public void setUserId(int userId) {
+    public int getPokemonId() {
+        return pokemonId;
     }
 
-    public void setUserId(UserModel user) {
+    public void setPokemonId(int pokemonId) {
+        this.pokemonId = pokemonId;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -82,11 +69,9 @@ public class UserFavPokemon {
     public String toString() {
         return "UserFavPokemon{" +
                 "id=" + id +
-                ", user=" + user +
                 ", pokemonId=" + pokemonId +
+                ", user=" + user +
                 '}';
     }
-
-
 }
 

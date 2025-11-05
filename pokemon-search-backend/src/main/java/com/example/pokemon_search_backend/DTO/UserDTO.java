@@ -4,8 +4,6 @@ import com.example.pokemon_search_backend.Model.UserFavPokemon;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class UserDTO {
 
@@ -14,8 +12,19 @@ public class UserDTO {
     private String email;
     private String password;
     private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
+//    private TeamDTO team;
 
+public UserDTO() {}
 
+    public UserDTO(int id, String username, String email, String password, List<UserFavPokemon> favoritePokemons) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.favoritePokemons = favoritePokemons;
+//        this.team = team;
+
+    }
 
 
 
@@ -58,4 +67,13 @@ public class UserDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
+//    public TeamDTO getTeam() {
+//        return team;
+//    }
+//    public void setTeam(TeamDTO team) {
+//        this.team = team;
+//    }
+
+
 }

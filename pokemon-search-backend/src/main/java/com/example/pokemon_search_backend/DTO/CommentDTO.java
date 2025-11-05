@@ -1,17 +1,20 @@
 package com.example.pokemon_search_backend.DTO;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class CommentDTO {
-
     private int id;
-    private int userId;
-    private String username;
-    private int pokemonId;
+    private String title;
     private String comment;
-    private LocalDateTime createdAt;
 
+    public CommentDTO() {
+    }
 
+    public CommentDTO(int id, String title, String comment) {
+        this.id = id;
+        this.title = title;
+        this.comment = comment;
+    }
 
     public int getId() {
         return id;
@@ -21,28 +24,12 @@ public class CommentDTO {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getPokemonId() {
-        return pokemonId;
-    }
-
-    public void setPokemonId(int pokemonId) {
-        this.pokemonId = pokemonId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getComment() {
@@ -53,11 +40,15 @@ public class CommentDTO {
         this.comment = comment;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CommentDTO that = (CommentDTO) o;
+        return id == that.id && Objects.equals(title, that.title) && Objects.equals(comment, that.comment);
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, comment);
     }
 }

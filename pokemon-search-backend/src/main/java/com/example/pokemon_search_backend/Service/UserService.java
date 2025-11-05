@@ -46,7 +46,7 @@ public class UserService {
                 userDTO.getPassword(),
                 userDTO.getEmail(),
                 (List<UserFavPokemon>) userDTO.getFavoritePokemons()
-        );
+                );
 
         UserModel savedUser = userRepository.save(userModel);
         return (savedUser);

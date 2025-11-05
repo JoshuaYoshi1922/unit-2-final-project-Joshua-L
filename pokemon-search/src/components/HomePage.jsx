@@ -14,37 +14,46 @@ function Home() {
   const [prevUrl, setPrevUrl] = useState("");
 
   useEffect(() => {
-    fetchAllPokemons(`${BASE_URL}${searchPokemon}`);
+    fetchAllPokemons(`${BASE_URL}`);
   }, []);
 
-  async function fetchAllPokemons(BASE_URL) {
+  
+
+  async function fetchAllPokemons(url) {
     setLoading(true);
     try {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      console.log("Received data:", data); // Debug log
 
-      setNextUrl(data.next);
-      setPrevUrl(data.previous);
+      // Map the backend PokemonModel to our frontend structure
+      const results = (Array.isArray(data) ? data : []).map((pokemon) => {
+        // Extract type names from the Type objects
+        const types = pokemon.types ? pokemon.types.map(type => 
+          typeof type === 'object' ? type.name || (type.type && type.type.name) : type
+        ).join(", ") : "";
 
-      const getAllPokemonsFromAPI = data.results.map(async (poke) => {
-        const res = await fetch(poke.url);
-        const details = await res.json();
+        // Extract move names from the Move objects
+        const moves = pokemon.moves ? pokemon.moves.map(move => 
+          typeof move === 'object' ? move.name || (move.move && move.move.name) : move
+        ).slice(0, 2).join(", ") : "";
+
         return {
-          id: details.id,
-          name: details.name,
-          type: details.types.map((t) => t.type.name).join(", "),
-          height: details.height,
-          weight: details.weight,
-          moves: details.moves
-            .map((m) => m.move.name)
-            .slice(0, 2)
-            .join(", "),
-          sprites: details.sprites.front_default,
+          id: pokemon.id,
+          name: pokemon.name,
+          type: types,
+          height: pokemon.height,
+          weight: pokemon.weight,
+          moves: moves,
+          sprites: {
+            front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+            front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`,
+          },
         };
       });
-
-      const results = await Promise.all(getAllPokemonsFromAPI);
-
       setPokemons(results);
     } catch (error) {
       console.error("Error fetching", error);
@@ -52,29 +61,38 @@ function Home() {
     setLoading(false);
   }
 
-  async function fetchSpecificPokemon(BASE_URL) {
+  async function fetchSpecificPokemon(url) {
     setLoading(true);
     try {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Pokemon not found");
       }
       const data = await response.json();
+      console.log("Received specific pokemon data:", data); // Debug log
+      
+      // Extract type names from the Type objects
+      const types = data.types ? data.types.map(type => 
+        typeof type === 'object' ? type.name || (type.type && type.type.name) : type
+      ).join(", ") : "";
 
-      return [
-        {
-          id: data.id,
-          name: data.name,
-          type: data.types.map((t) => t.type.name).join(", "),
-          height: data.height,
-          weight: data.weight,
-          moves: data.moves
-            .map((m) => m.move.name)
-            .slice(0, 2)
-            .join(", "),
-          sprites: data.sprites.front_default,
+      // Extract move names from the Move objects
+      const moves = data.moves ? data.moves.map(move => 
+        typeof move === 'object' ? move.name || (move.move && move.move.name) : move
+      ).slice(0, 2).join(", ") : "";
+      
+      return [{
+        id: data.id,
+        name: data.name,
+        type: types,
+        height: data.height,
+        weight: data.weight,
+        moves: moves,
+        sprites: {
+          front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
+          front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${data.id}.png`,
         },
-      ];
+      }];
     } catch (error) {
       console.error("Error fetching", error);
       throw error;
@@ -91,10 +109,11 @@ function Home() {
       const newPokemon = await fetchSpecificPokemon(
         `${BASE_URL}${searchTerm.toLowerCase()}`
       );
+      console.log("Search result:", newPokemon); // Debug log
       setPokemons(newPokemon);
       setError(null);
     } catch (error) {
-      console.error(error);
+      console.error("Search error:", error);
       setError("Pokemon not found. Please try again.");
     } finally {
       setLoading(false);
