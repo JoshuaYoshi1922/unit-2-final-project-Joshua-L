@@ -19,7 +19,7 @@ public class UserModel {
     private String teamName;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
 
 

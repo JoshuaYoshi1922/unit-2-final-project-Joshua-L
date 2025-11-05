@@ -1,6 +1,7 @@
 package com.example.pokemon_search_backend.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -18,13 +19,18 @@ public class PokemonModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
+    @Transient
     private ArrayList<Type> types;
+
     public int base_experience;
     public int height;
     public int weight;
+    @Transient
     private ArrayList<Move> moves;
 
-    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pokemonModel", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<CommentModel> comments = new ArrayList<>();
 
 

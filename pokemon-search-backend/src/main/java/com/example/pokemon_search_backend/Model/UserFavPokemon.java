@@ -21,12 +21,12 @@ public class UserFavPokemon {
     @JsonBackReference
     private UserModel user;
 
-    @Column(name = "pokemon_id")
-    private int pokemonId;
+    @Column(name = "pokemonModel")
+    private PokemonModel pokemonModel;
 
-    public UserFavPokemon(UserModel user, int pokemonId) {
+    public UserFavPokemon(UserModel user, PokemonModel pokemonModel) {
         this.user = user;
-        this.pokemonId = pokemonId;
+        this.pokemonModel = pokemonModel;
     }
 
     public UserFavPokemon() {}
@@ -47,12 +47,12 @@ public class UserFavPokemon {
         this.user = user;
     }
 
-    public int getPokemonId() {
-        return pokemonId;
+    public PokemonModel getPokemonModel() {
+        return pokemonModel;
     }
 
-    public void setPokemonId(int pokemonId) {
-        this.pokemonId = pokemonId;
+    public void setPokemonModel(PokemonModel pokemonModel) {
+        this.pokemonModel = pokemonModel;
     }
 }
 

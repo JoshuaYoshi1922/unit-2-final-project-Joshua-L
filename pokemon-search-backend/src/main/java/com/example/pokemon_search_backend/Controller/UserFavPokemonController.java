@@ -1,5 +1,6 @@
 package com.example.pokemon_search_backend.Controller;
 
+import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
 import com.example.pokemon_search_backend.Service.UserFavPokemonService;
 import com.example.pokemon_search_backend.Service.UserService;
@@ -26,11 +27,11 @@ public class UserFavPokemonController {
     @PostMapping("/user/{userId}/pokemon/{pokemonId}")
     public ResponseEntity<?> addFavoritePokemon(
             @PathVariable int userId,
-            @PathVariable int pokemonId) {
+            @PathVariable PokemonModel pokemonModel) {
         try {
             return userService.getUserById(userId)
                     .map(user -> {
-                        UserFavPokemon favPokemon = favPokemonService.addFavoritePokemon(user, pokemonId);
+                        UserFavPokemon favPokemon = favPokemonService.addFavoritePokemon(user, pokemonModel);
                         return ResponseEntity.ok(favPokemon);
                     })
                     .orElse(ResponseEntity.notFound().build());
@@ -42,9 +43,9 @@ public class UserFavPokemonController {
     @DeleteMapping("/user/{userId}/pokemon/{pokemonId}")
     public ResponseEntity<?> removeFavoritePokemon(
             @PathVariable int userId,
-            @PathVariable int pokemonId) {
+            @PathVariable PokemonModel pokemonModel) {
         try {
-            favPokemonService.removeFavoritePokemon(userId, pokemonId);
+            favPokemonService.removeFavoritePokemon(userId, pokemonModel);
             return ResponseEntity.ok().body("Pokemon removed from favorites");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

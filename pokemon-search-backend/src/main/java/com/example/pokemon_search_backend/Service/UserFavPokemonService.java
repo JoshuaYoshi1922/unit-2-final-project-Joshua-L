@@ -1,6 +1,7 @@
 package com.example.pokemon_search_backend.Service;
 
 
+import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
 import com.example.pokemon_search_backend.Model.UserModel;
 import com.example.pokemon_search_backend.Repository.UserFavPokemonRepo;
@@ -20,18 +21,18 @@ public class UserFavPokemonService {
     }
 
     @Transactional
-    public UserFavPokemon addFavoritePokemon(UserModel user, int pokemonId) {
-        if (favPokemonRepo.existsByUser_IdAndPokemonId(user.getId(), pokemonId)) {
+    public UserFavPokemon addFavoritePokemon(UserModel user, PokemonModel pokemonModel) {
+        if (favPokemonRepo.existsByUser_IdAndPokemonModel(user.getId(), pokemonModel)) {
             throw new RuntimeException("Pokemon already in favorites");
         }
 
-        UserFavPokemon favPokemon = new UserFavPokemon(user, pokemonId);
+        UserFavPokemon favPokemon = new UserFavPokemon(user, pokemonModel);
         return favPokemonRepo.save(favPokemon);
     }
 
     @Transactional
-    public void removeFavoritePokemon(int userId, int pokemonId) {
-        favPokemonRepo.findByUser_IdAndPokemonId(userId, pokemonId)
+    public void removeFavoritePokemon(int userId, PokemonModel pokemonModel) {
+        favPokemonRepo.findByUser_IdAndPokemonModel(userId, pokemonModel)
                 .ifPresent(favPokemonRepo::delete);
     }
 
