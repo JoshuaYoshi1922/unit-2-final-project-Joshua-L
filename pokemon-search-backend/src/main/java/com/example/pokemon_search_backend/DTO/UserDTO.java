@@ -1,8 +1,7 @@
 package com.example.pokemon_search_backend.DTO;
 
-import com.example.pokemon_search_backend.Model.UserFavPokemon;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class UserDTO {
@@ -11,27 +10,25 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
-//    private TeamDTO team;
+    private String teamName;
+//    private List<UserFavPokemon> favoritePokemons;
 
-public UserDTO() {}
 
-    public UserDTO(int id, String username, String email, String password, List<UserFavPokemon> favoritePokemons) {
+    public UserDTO() {
+    }
+
+    public UserDTO(int id, String username, String email, String password, String teamName) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.favoritePokemons = favoritePokemons;
-//        this.team = team;
-
+        this.teamName = teamName;
     }
-
-
-
 
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -53,13 +50,6 @@ public UserDTO() {}
         this.email = email;
     }
 
-    public List<UserFavPokemon> getFavoritePokemons() {
-        return favoritePokemons;
-    }
-    public void setFavoritePokemons(List<UserFavPokemon> favoritePokemons) {
-        this.favoritePokemons = favoritePokemons;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -68,12 +58,10 @@ public UserDTO() {}
         this.password = password;
     }
 
-//    public TeamDTO getTeam() {
-//        return team;
-//    }
-//    public void setTeam(TeamDTO team) {
-//        this.team = team;
-//    }
-
-
+    public String getTeamName() {
+        return teamName;
+    }
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
 }

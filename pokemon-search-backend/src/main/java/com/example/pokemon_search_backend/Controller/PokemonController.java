@@ -30,4 +30,15 @@ public class PokemonController {
     public List<PokemonModel> getPokemonList(){
         return pokemonService.getPokemonList();
     }
+
+    @PostMapping("/add/{nameOrId}")
+    public String addPokemon(@PathVariable String nameOrId) {
+        try {
+            PokemonModel pokemon = pokemonService.getPokemon(nameOrId);
+            pokemonService.savePokemon(pokemon);
+            return "Pokemon added successfully: " + pokemon.getName();
+        } catch (Exception e) {
+            return "Error adding pokemon: " + e.getMessage();
+        }
+    }
 }

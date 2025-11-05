@@ -1,6 +1,5 @@
 package com.example.pokemon_search_backend.Service;
 
-
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Repository.PokemonRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,11 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PokemonService {
@@ -20,6 +16,12 @@ public class PokemonService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String url = "https://pokeapi.co/api/v2/pokemon/";
+    private final PokemonRepository pokemonRepository;
+
+    @Autowired
+    public PokemonService(PokemonRepository pokemonRepository) {
+        this.pokemonRepository = pokemonRepository;
+    }
 
     public PokemonModel getPokemon(String nameOrId) {
         String response = restTemplate.getForObject(url + nameOrId, String.class);
@@ -88,8 +90,6 @@ public class PokemonService {
             e.printStackTrace();
             return pokemonList;
 
-
         }
     }
-
 }

@@ -58,6 +58,7 @@ public class PokemonModel {
         this.name = name;
     }
 
+
     public ArrayList<Type> getTypes() {
         return types;
     }
@@ -90,6 +91,7 @@ public class PokemonModel {
         this.weight = weight;
     }
 
+
     public List<Move> getMoves() {
         return moves;
     }
@@ -98,6 +100,7 @@ public class PokemonModel {
         this.moves = (ArrayList<Move>) movesList;
     }
 
+
     public static class Type {
 
         private String name; // Added name field based on constructor usage
@@ -105,6 +108,7 @@ public class PokemonModel {
         public Type(String typeName) {
             this.name = typeName; // Initialize the name field
         }
+
         public Type() {
         }
 
@@ -140,53 +144,56 @@ public class PokemonModel {
         }
     }
 
-        public static class Move {
 
-            private String name; // Added name field based on constructor usage
+    public static class Move {
 
-            public Move(String moveName) {
-                this.name = moveName; // Initialize the name field
-            }
-            public Move() {
-            }
+        private String name; // Added name field based on constructor usage
 
-            public String getName() {
-                return this.name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
+        public Move(String moveName) {
+            this.name = moveName; // Initialize the name field
         }
 
-        public static class Move2 {
-            private String name;
+        public Move() {
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class Move2 {
+        private String name;
 
 
+        public Move2(String name) {
+            this.name = name;
 
-            public Move2(String name) {
-                this.name = name;
-
-            }
+        }
 
 
-            public Move2() {
-            }
+        public Move2() {
+        }
 
-            @JsonProperty("name")
-            public String getName() {
-                return this.name;
-            }
+        @JsonProperty("name")
+        public String getName() {
+            return this.name;
+        }
 
-            public void setName(String name) {
-                this.name = name;
-            }
+        public void setName(String name) {
+            this.name = name;
+        }
 
 
     }
+
     public List<CommentModel> getComments() {
         return comments;
     }
+
     public void setComments(List<CommentModel> comments) {
         this.comments = comments;
     }
