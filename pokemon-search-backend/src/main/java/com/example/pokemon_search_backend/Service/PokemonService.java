@@ -92,4 +92,8 @@ public class PokemonService {
 
         }
     }
+
+    public void savePokemon(PokemonModel pokemonModel) {
+        pokemonRepository.save(pokemonModel);
+    }
 }

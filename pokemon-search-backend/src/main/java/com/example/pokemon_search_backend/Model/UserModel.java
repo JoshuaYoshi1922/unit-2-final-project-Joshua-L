@@ -18,17 +18,18 @@ public class UserModel {
     private String password;
     private String teamName;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserFavPokemon> favoritePokemons = new ArrayList<>();
 
 
-    public UserModel(int id, String username, String email, String password, String teamName) {
+    public UserModel(int id, String username, String email, String password, String teamName, List<UserFavPokemon> favoritePokemons) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.teamName = teamName;
+        this.favoritePokemons = favoritePokemons;
     }
 
     public UserModel() {}
@@ -73,14 +74,12 @@ public class UserModel {
         this.teamName = teamName;
     }
 
-//    public List<UserFavPokemon> getFavoritePokemons() {
-//        return favoritePokemons;
-//    }
-//
-//    public void setFavoritePokemons(List<UserFavPokemon> favoritePokemons) {
-//        this.favoritePokemons = favoritePokemons;
-//    }
+    public List<UserFavPokemon> getFavoritePokemons() {
+        return favoritePokemons;
+    }
 
-
+    public void setFavoritePokemons(List<UserFavPokemon> favoritePokemons) {
+        this.favoritePokemons = favoritePokemons;
+    }
 }
 
