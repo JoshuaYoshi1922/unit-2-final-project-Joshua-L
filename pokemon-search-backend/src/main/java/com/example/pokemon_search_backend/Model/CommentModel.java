@@ -1,49 +1,57 @@
 package com.example.pokemon_search_backend.Model;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "pokemon_comments")
+@Table(name = "comments")
 public class CommentModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    private String comment;
+
+    @ManyToOne
+    @JoinColumn(name = "user")
     private UserModel user;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemon_id", nullable = false)
-    private UserFavPokemon favPokemon;
+    @JsonBackReference
+    @ManyToOne
+    private PokemonModel pokemonModel;
 
-    @Column(name = "comment_text", nullable = false, length = 1000)
-    private String commentText;
+    private boolean isFavPokemon = true;
 
-    @Column(name = "timestamp", nullable = false)
-    private LocalDateTime createdAt;
-
-    public CommentModel() {
-        this.createdAt = LocalDateTime.now();
+    public CommentModel(int id, String comment, UserModel user, PokemonModel pokemonModel, boolean isFavPokemon) {
+        this.id = id;
+        this.comment = comment;
+        this.user = user;
+        this.pokemonModel = pokemonModel;
+        this.isFavPokemon = isFavPokemon;
     }
 
-    public CommentModel(UserModel user, UserFavPokemon favPokemon, String commentText) {
-        this.user = user;
-        this.favPokemon = favPokemon;
-        this.commentText = commentText;
-        this.createdAt = LocalDateTime.now();
+    public CommentModel() {
+
     }
 
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public UserModel getUser() {
@@ -54,50 +62,19 @@ public class CommentModel {
         this.user = user;
     }
 
-    public UserFavPokemon getFavPokemon() {
-        return favPokemon;
+    public PokemonModel getPokemonModel() {
+        return pokemonModel;
     }
 
-    public void setFavPokemon(UserFavPokemon favPokemon) {
-        this.favPokemon = favPokemon;
+    public void setPokemonModel(PokemonModel pokemonModel) {
+        this.pokemonModel = pokemonModel;
     }
 
-    public String getCommentText() {
-        return commentText;
+    public boolean isFavPokemon() {
+        return isFavPokemon;
     }
 
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "CommentModel{" +
-                "id=" + id +
-                ", user=" + user +
-                ", favPokemon=" + favPokemon +
-                ", commentText='" + commentText + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        CommentModel that = (CommentModel) o;
-        return id == that.id && Objects.equals(user, that.user) && Objects.equals(favPokemon, that.favPokemon) && Objects.equals(commentText, that.commentText) && Objects.equals(createdAt, that.createdAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user, favPokemon, commentText, createdAt);
+    public void setFavPokemon(boolean favPokemon) {
+        isFavPokemon = favPokemon;
     }
 }

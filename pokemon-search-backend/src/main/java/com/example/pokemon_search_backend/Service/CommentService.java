@@ -1,59 +1,49 @@
 package com.example.pokemon_search_backend.Service;
 
 import com.example.pokemon_search_backend.Model.CommentModel;
-
-import com.example.pokemon_search_backend.Model.UserFavPokemon;
+import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Model.UserModel;
-import com.example.pokemon_search_backend.Repository.CommentRepository;
-import com.example.pokemon_search_backend.Repository.UserFavPokemonRepo;
-
+import com.example.pokemon_search_backend.Repository.CommentRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentService {
 
-    private final CommentRepository commentRepository;
-    private UserFavPokemonRepo userFavPokemonRepo;
+    private final CommentRepo commentRepo;
+    private final UserService userService;
 
-    public CommentService(CommentRepository commentRepository, UserFavPokemonRepo userFavPokemonRepository) {
-        this.commentRepository = commentRepository;
-        this.userFavPokemonRepo = userFavPokemonRepo;
+    @Autowired
+    public CommentService(CommentRepo commentRepo, UserService userService) {
+        this.commentRepo = commentRepo;
+        this.userService = userService;
     }
 
-    public CommentModel createComment(UserModel user, int pokemonId, String commentText) {
-        Optional<UserFavPokemon> userFavPokemon = userFavPokemonRepo.findByUser_IdAndPokemonId(user.getId(), pokemonId);
+    public CommentModel addOrUpdateComment(int userId, PokemonModel pokemonModel, String comment) {
+        UserModel user = userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(userFavPokemon.isPresent()) {
-            CommentModel comment = new CommentModel(user, userFavPokemon.get(), commentText);
-            return commentRepository.save(comment);
-        }
-        throw new RuntimeException("Favorite Pokemon not found for user ID");
+        CommentModel commentModel = commentRepo
+                .findByUserIdAndPokemonModelAndIsFavPokemon(userId, pokemonModel, true)
+                .orElse(new CommentModel());
+
+        commentModel.setUser(user);
+        commentModel.setPokemonModel(pokemonModel);
+        commentModel.setComment(comment);
+        commentModel.setFavPokemon(true);
+
+        return commentRepo.save(commentModel);
+
     }
 
-    public List<CommentModel> getCommentsByPokemonId(int pokemonId) {
-        return commentRepository.findByFavPokemon_PokemonId(pokemonId);
+    public void deleteComment(int userId, PokemonModel pokemonModel) {
+        commentRepo.findByUserIdAndPokemonModelAndIsFavPokemon(userId,pokemonModel, true)
+                .ifPresent(commentRepo::delete);
     }
 
-    public List<CommentModel> getCommentsByUserId(int userId) {
-        return commentRepository.findByUser_Id(userId);
+    public CommentModel getFavoriteComment(int userId, PokemonModel pokemonModel) {
+        return commentRepo.findByUserIdAndPokemonModelAndIsFavPokemon(userId, pokemonModel, true)
+                .orElse(null);
     }
 
-    public CommentModel updateComment(int commentId, String commentText) {
-        Optional<CommentModel> existingComment = commentRepository.findById(commentId);
-
-        if(existingComment.isPresent()) {
-            CommentModel comment = existingComment.get();
-            comment.setCommentText(commentText);
-            return commentRepository.save(comment);
-        }
-        throw new RuntimeException("Comment not found with ID: ");
-    }
-
-    public void deleteComment(int commentId) {
-        commentRepository.deleteById(commentId);
-    }
 
 }

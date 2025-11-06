@@ -13,42 +13,30 @@ public class UserFavPokemon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-
-    private int pokemonId;
+    private Long id;
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user")
     @JsonBackReference
     private UserModel user;
 
+    @Column(name = "pokemonModel")
+    private PokemonModel pokemonModel;
 
-    public UserFavPokemon(int pokemonId, UserModel user) {
-        this.pokemonId = pokemonId;
+    public UserFavPokemon(UserModel user, PokemonModel pokemonModel) {
         this.user = user;
-
+        this.pokemonModel = pokemonModel;
     }
 
-    public UserFavPokemon() {
-    }
+    public UserFavPokemon() {}
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-
-    public int getPokemonId() {
-        return pokemonId;
-    }
-
-    public void setPokemonId(int pokemonId) {
-        this.pokemonId = pokemonId;
     }
 
     public UserModel getUser() {
@@ -59,34 +47,14 @@ public class UserFavPokemon {
         this.user = user;
     }
 
-    public void setUserId(int userId) {
+    public PokemonModel getPokemonModel() {
+        return pokemonModel;
     }
 
-    public void setUserId(UserModel user) {
+    public void setPokemonModel(PokemonModel pokemonModel) {
+        this.pokemonModel = pokemonModel;
     }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        UserFavPokemon that = (UserFavPokemon) o;
-        return id == that.id && pokemonId == that.pokemonId && Objects.equals(user, that.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, pokemonId, user);
-    }
-
-    @Override
-    public String toString() {
-        return "UserFavPokemon{" +
-                "id=" + id +
-                ", user=" + user +
-                ", pokemonId=" + pokemonId +
-                '}';
-    }
-
-
 }
+
+
 

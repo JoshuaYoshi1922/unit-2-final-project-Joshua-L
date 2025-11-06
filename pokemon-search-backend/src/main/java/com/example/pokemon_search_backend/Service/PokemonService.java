@@ -1,11 +1,12 @@
 package com.example.pokemon_search_backend.Service;
 
 import com.example.pokemon_search_backend.Model.PokemonModel;
+import com.example.pokemon_search_backend.Repository.PokemonRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,12 @@ public class PokemonService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String url = "https://pokeapi.co/api/v2/pokemon/";
+    private final PokemonRepository pokemonRepository;
+
+    @Autowired
+    public PokemonService(PokemonRepository pokemonRepository) {
+        this.pokemonRepository = pokemonRepository;
+    }
 
     public PokemonModel getPokemon(String nameOrId) {
         String response = restTemplate.getForObject(url + nameOrId, String.class);
@@ -30,7 +37,7 @@ public class PokemonService {
             // Extract types from the API response
             JsonNode typesNode = root.path("types");
             if (typesNode.isArray()) {
-                List<PokemonModel.Type> typesList = new ArrayList<>();
+                ArrayList<PokemonModel.Type> typesList = new ArrayList<>();
                 for (JsonNode typeNode : typesNode) {
                     JsonNode typeInfo = typeNode.path("type");
                     String typeName = typeInfo.path("name").asText();
@@ -83,8 +90,10 @@ public class PokemonService {
             e.printStackTrace();
             return pokemonList;
 
-
         }
     }
 
+    public void savePokemon(PokemonModel pokemonModel) {
+        pokemonRepository.save(pokemonModel);
+    }
 }

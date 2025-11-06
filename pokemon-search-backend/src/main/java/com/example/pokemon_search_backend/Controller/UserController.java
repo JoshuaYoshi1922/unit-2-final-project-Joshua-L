@@ -4,6 +4,7 @@ package com.example.pokemon_search_backend.Controller;
 
 import com.example.pokemon_search_backend.DTO.UserDTO;
 import com.example.pokemon_search_backend.Model.UserModel;
+import com.example.pokemon_search_backend.Repository.UserRepository;
 import com.example.pokemon_search_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,16 +49,13 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserModel> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
-        UserModel response = userService.updateUser(id, userDTO);
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        }
-        return null;
+        UserModel updatedUser = userService.updateUser(id, userDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 }

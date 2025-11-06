@@ -1,6 +1,7 @@
 package com.example.pokemon_search_backend.Controller;
 
 
+
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Service.PokemonService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,5 +29,16 @@ public class PokemonController {
     @GetMapping("/")
     public List<PokemonModel> getPokemonList(){
         return pokemonService.getPokemonList();
+    }
+
+    @PostMapping("/add/{nameOrId}")
+    public String addPokemon(@PathVariable String nameOrId) {
+        try {
+            PokemonModel pokemon = pokemonService.getPokemon(nameOrId);
+            pokemonService.savePokemon(pokemon);
+            return "Pokemon added successfully: " + pokemon.getName();
+        } catch (Exception e) {
+            return "Error adding pokemon: " + e.getMessage();
+        }
     }
 }
