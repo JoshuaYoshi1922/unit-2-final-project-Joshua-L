@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-
+import { useAuth } from "../contexts/AuthContext";
 import TeamName from "./TeamName";
 
 function Header() {
-
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <>
@@ -30,6 +30,30 @@ function Header() {
           <li className="nav-link">
             <Link to="/about">About</Link>
           </li>
+          {isAuthenticated ? (
+            <>
+              <li className="nav-link">
+                <Link to="/profile">Profile</Link>
+              </li>
+              <li className="nav-link" style={{ color: "#4a90e2" }}>
+                Welcome, {user?.username}!
+              </li>
+              <li className="nav-link">
+                <button onClick={logout} style={{ cursor: "pointer", background: "none", border: "none", color: "inherit", fontSize: "inherit" }}>
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="nav-link">
+                <Link to="/login">Login</Link>
+              </li>
+              <li className="nav-link">
+                <Link to="/register">Register</Link>
+              </li>
+            </>
+          )}
         </ul>
       </header>
     </>
