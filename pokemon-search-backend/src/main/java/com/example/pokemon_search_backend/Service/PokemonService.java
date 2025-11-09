@@ -1,10 +1,13 @@
 package com.example.pokemon_search_backend.Service;
 
+import com.example.pokemon_search_backend.DTO.PokemonDTO;
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Repository.PokemonRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
@@ -23,11 +26,16 @@ public class PokemonService {
         this.pokemonRepository = pokemonRepository;
     }
 
-    public PokemonModel getPokemon(String nameOrId) {
+    public PokemonModel savePokemonModel(PokemonModel pokemonModel) {
+        return pokemonRepository.save(pokemonModel);
+    }
+
+
+    public PokemonDTO getPokemon(String nameOrId) {
         String response = restTemplate.getForObject(url + nameOrId, String.class);
         try {
             JsonNode root = objectMapper.readTree(response);
-            PokemonModel pokemon = new PokemonModel();
+            PokemonDTO pokemon = new PokemonDTO();
             pokemon.setId(root.path("id").asInt());
             pokemon.setName(root.path("name").asText());
             pokemon.base_experience = root.path("base_experience").asInt();
@@ -37,24 +45,25 @@ public class PokemonService {
             // Extract types from the API response
             JsonNode typesNode = root.path("types");
             if (typesNode.isArray()) {
-                ArrayList<PokemonModel.Type> typesList = new ArrayList<>();
+                List<String> typesList = new ArrayList<>();
                 for (JsonNode typeNode : typesNode) {
                     JsonNode typeInfo = typeNode.path("type");
                     String typeName = typeInfo.path("name").asText();
-                    typesList.add(new PokemonModel.Type(typeName));
+                    typesList.add(typeName);
+
                 }
                 pokemon.setTypes(typesList);
             }
             // Extract moves from the API response
             JsonNode movesNode = root.path("moves");
             if (movesNode.isArray()) {
-                List<PokemonModel.Move> movesList = new ArrayList<>();
+                List<String> movesList = new ArrayList<>();
                 int moveCount = 0;
                 for (JsonNode moveNode : movesNode) {
                     if (moveCount >= 3 ) break; //
                     JsonNode moveInfo = moveNode.path("move");
                     String moveName = moveInfo.path("name").asText();
-                    movesList.add(new PokemonModel.Move(moveName));
+                    movesList.add(moveName);
                     moveCount++;
                 }
                 pokemon.setMoves(movesList);
@@ -67,9 +76,9 @@ public class PokemonService {
         }
     }
 
-    public List<PokemonModel> getPokemonList() {
+    public List<PokemonDTO> getPokemonList() {
         String response = restTemplate.getForObject(url, String.class);
-        List<PokemonModel> pokemonList = new ArrayList<>();
+        List<PokemonDTO> pokemonList = new ArrayList<>();
 
         try {
             JsonNode root = objectMapper.readTree(response);
@@ -78,7 +87,7 @@ public class PokemonService {
             if (results.isArray()) {
                 for (JsonNode pokemonNode : results) {
                     String pokemonName = pokemonNode.path("name").asText();
-                    PokemonModel pokemon = getPokemon(pokemonName);
+                    PokemonDTO pokemon = getPokemon(pokemonName);
                     if (pokemon != null) {
                         pokemonList.add(pokemon);
                     }
@@ -93,7 +102,4 @@ public class PokemonService {
         }
     }
 
-    public void savePokemon(PokemonModel pokemonModel) {
-        pokemonRepository.save(pokemonModel);
-    }
 }

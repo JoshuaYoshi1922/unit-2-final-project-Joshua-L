@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.springframework.cache.annotation.CachePut;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,12 +31,10 @@ public class PokemonModel {
     @Transient
     private ArrayList<Move> moves;
 
-    @OneToMany(mappedBy = "pokemonModel", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<CommentModel> comments = new ArrayList<>();
 
 
-    public PokemonModel(int id, String name, ArrayList<Type> types, int base_experience, int height, int weight, ArrayList<Move> moves, ArrayList<CommentModel> comments) {
+
+    public PokemonModel(int id, String name, ArrayList<Type> types, int base_experience, int height, int weight, ArrayList<Move> moves) {
         this.id = id;
         this.name = name;
         this.types = types;
@@ -42,7 +42,6 @@ public class PokemonModel {
         this.height = height;
         this.weight = weight;
         this.moves = moves;
-        this.comments = comments;
     }
 
     public PokemonModel() {
@@ -109,10 +108,10 @@ public class PokemonModel {
 
     public static class Type {
 
-        private String name; // Added name field based on constructor usage
+        private String name;
 
         public Type(String typeName) {
-            this.name = typeName; // Initialize the name field
+            this.name = typeName;
         }
 
         public Type() {
@@ -153,10 +152,10 @@ public class PokemonModel {
 
     public static class Move {
 
-        private String name; // Added name field based on constructor usage
+        private String name;
 
         public Move(String moveName) {
-            this.name = moveName; // Initialize the name field
+            this.name = moveName;
         }
 
         public Move() {
@@ -196,24 +195,15 @@ public class PokemonModel {
 
     }
 
-    public List<CommentModel> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentModel> comments) {
-        this.comments = comments;
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PokemonModel that = (PokemonModel) o;
-        return id == that.id && base_experience == that.base_experience && height == that.height && weight == that.weight && Objects.equals(name, that.name) && Objects.equals(types, that.types) && Objects.equals(moves, that.moves) && Objects.equals(comments, that.comments);
+        return id == that.id && base_experience == that.base_experience && height == that.height && weight == that.weight && Objects.equals(name, that.name) && Objects.equals(types, that.types) && Objects.equals(moves, that.moves);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, types, base_experience, height, weight, moves, comments);
+        return Objects.hash(id, name, types, base_experience, height, weight, moves);
     }
 }

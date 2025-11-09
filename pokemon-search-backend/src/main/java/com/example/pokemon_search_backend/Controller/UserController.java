@@ -2,6 +2,8 @@ package com.example.pokemon_search_backend.Controller;
 
 
 
+import com.example.pokemon_search_backend.DTO.LoginRequest;
+import com.example.pokemon_search_backend.DTO.LoginResponse;
 import com.example.pokemon_search_backend.DTO.UserDTO;
 import com.example.pokemon_search_backend.Model.UserModel;
 import com.example.pokemon_search_backend.Repository.UserRepository;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -44,6 +47,30 @@ public class UserController {
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        Optional<UserModel> userOptional = userService.authenticateUser(
+            loginRequest.getUsername(), 
+            loginRequest.getPassword()
+        );
+
+        if (userOptional.isPresent()) {
+            UserModel user = userOptional.get();
+            UserDTO userDTO = new UserDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                null, // Don't send password back
+                user.getTeamName()
+            );
+            LoginResponse response = new LoginResponse(true, "Login successful", userDTO);
+            return ResponseEntity.ok(response);
+        } else {
+            LoginResponse response = new LoginResponse(false, "Invalid username or password", null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 

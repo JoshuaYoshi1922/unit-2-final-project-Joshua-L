@@ -1,5 +1,6 @@
 package com.example.pokemon_search_backend.Controller;
 
+import com.example.pokemon_search_backend.DTO.UserFavPokemonDTO;
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
 import com.example.pokemon_search_backend.Service.UserFavPokemonService;
@@ -27,11 +28,11 @@ public class UserFavPokemonController {
     @PostMapping("/user/{userId}/pokemon/{pokemonId}")
     public ResponseEntity<?> addFavoritePokemon(
             @PathVariable int userId,
-            @PathVariable PokemonModel pokemonModel) {
+            @PathVariable int pokemonId) {
         try {
             return userService.getUserById(userId)
                     .map(user -> {
-                        UserFavPokemon favPokemon = favPokemonService.addFavoritePokemon(user, pokemonModel);
+                        UserFavPokemonDTO favPokemon = favPokemonService.addFavoritePokemon(user, pokemonId);
                         return ResponseEntity.ok(favPokemon);
                     })
                     .orElse(ResponseEntity.notFound().build());
@@ -43,9 +44,9 @@ public class UserFavPokemonController {
     @DeleteMapping("/user/{userId}/pokemon/{pokemonId}")
     public ResponseEntity<?> removeFavoritePokemon(
             @PathVariable int userId,
-            @PathVariable PokemonModel pokemonModel) {
+            @PathVariable int pokemonId) {
         try {
-            favPokemonService.removeFavoritePokemon(userId, pokemonModel);
+            favPokemonService.removeFavoritePokemon(userId, pokemonId);
             return ResponseEntity.ok().body("Pokemon removed from favorites");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -53,8 +54,8 @@ public class UserFavPokemonController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserFavPokemon>> getUserFavorites(@PathVariable int userId) {
-        List<UserFavPokemon> favorites = favPokemonService.getUserFavorites(userId);
+    public ResponseEntity<List<UserFavPokemonDTO>> getUserFavorites(@PathVariable int userId) {
+        List<UserFavPokemonDTO> favorites = favPokemonService.getUserFavorites(userId);
         return ResponseEntity.ok(favorites);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.pokemon_search_backend.Service;
 
 
+import com.example.pokemon_search_backend.DTO.PokemonDTO;
+import com.example.pokemon_search_backend.DTO.UserFavPokemonDTO;
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
 import com.example.pokemon_search_backend.Model.UserModel;
@@ -10,35 +12,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserFavPokemonService {
     private final UserFavPokemonRepo favPokemonRepo;
+    private final PokemonService pokemonService;
 
     @Autowired
-    public UserFavPokemonService(UserFavPokemonRepo favPokemonRepo) {
+    public UserFavPokemonService(UserFavPokemonRepo favPokemonRepo, PokemonService pokemonService) {
+        this.pokemonService = pokemonService;
         this.favPokemonRepo = favPokemonRepo;
     }
 
     @Transactional
-    public UserFavPokemon addFavoritePokemon(UserModel user, PokemonModel pokemonModel) {
-        if (favPokemonRepo.existsByUser_IdAndPokemonModel(user.getId(), pokemonModel)) {
+    public UserFavPokemonDTO addFavoritePokemon(UserModel user, int pokemonId) {
+        if (favPokemonRepo.existsByUser_IdAndPokemonModel_Id(user.getId(), pokemonId)) {
             throw new RuntimeException("Pokemon already in favorites");
         }
 
-        UserFavPokemon favPokemon = new UserFavPokemon(user, pokemonModel);
-        return favPokemonRepo.save(favPokemon);
+        UserFavPokemon favPokemon = new UserFavPokemon(user, pokemonId);
+        favPokemon.setUser(user);
+        favPokemon.setPokemonId(pokemonId);
+        favPokemonRepo.save(favPokemon);
+
+        PokemonDTO pokemonDTO = pokemonService.getPokemon(String.valueOf(pokemonId));
+        return new UserFavPokemonDTO(favPokemon.getId(), pokemonId, user.getId());
+
     }
 
     @Transactional
-    public void removeFavoritePokemon(int userId, PokemonModel pokemonModel) {
-        favPokemonRepo.findByUser_IdAndPokemonModel(userId, pokemonModel)
+    public void removeFavoritePokemon(int userId, int pokemonId) {
+        favPokemonRepo.findByUser_IdAndPokemonModel_Id(userId, pokemonId)
                 .ifPresent(favPokemonRepo::delete);
     }
 
-    public List<UserFavPokemon> getUserFavorites(int userId) {
-        return favPokemonRepo.findByUser_Id(userId);
+    public List<UserFavPokemonDTO> getUserFavorites(int userId) {
+        List<UserFavPokemon> favorites = favPokemonRepo.findByUser_Id(userId);
+        return favorites.stream()
+                .map(fav -> {
+                    PokemonDTO pokemonDTO = pokemonService.getPokemon(String.valueOf(fav.getPokemonId()));
+                    return new UserFavPokemonDTO(fav.getId(), fav.getPokemonId(), userId);
+                })
+                .collect(Collectors.toList());
     }
+
 }
 
 
