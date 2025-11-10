@@ -2,6 +2,8 @@ package com.example.pokemon_search_backend.DTO;
 
 
 
+import com.example.pokemon_search_backend.Model.UserFavPokemon;
+
 import java.util.List;
 
 public class UserDTO {
@@ -11,19 +13,17 @@ public class UserDTO {
     private String email;
     private String password;
     private String teamName;
-//    private List<UserFavPokemon> favoritePokemons;
+    private List<UserFavPokemon> favoritePokemons;
 
 
-    public UserDTO() {
-    }
-
-    public UserDTO(int id, String username, String email, String password, String teamName) {
+    public UserDTO(int id, String username, String email, Object o, String teamName, List<UserFavPokemon> favoritePokemons) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password = password;
         this.teamName = teamName;
+        this.favoritePokemons = favoritePokemons;
     }
+
 
     public int getId() {
         return id;
@@ -64,4 +64,12 @@ public class UserDTO {
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
+
+    public List<UserFavPokemon> getFavoritePokemons() {
+        return favoritePokemons;
+    }
+    public void setFavoritePokemons(List<UserFavPokemon> favoritePokemons) {
+        this.favoritePokemons = favoritePokemons;
+    }
+
 }

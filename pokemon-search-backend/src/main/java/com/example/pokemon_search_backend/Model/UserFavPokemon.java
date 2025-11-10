@@ -2,13 +2,9 @@ package com.example.pokemon_search_backend.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
 
-import java.util.*;
 
-@NoArgsConstructor
 @Entity
 @Table(name = "user_fav_pokemon")
 public class UserFavPokemon {
@@ -23,20 +19,26 @@ public class UserFavPokemon {
     @JsonBackReference
     private UserModel user;
 
-    @ManyToOne
-    private PokemonModel pokemonModel;
-
-    @JoinColumn(name = "pokemon_Id")
+    @Column(name = "pokemonId")
     private int pokemonId;
 
-    public UserFavPokemon(int id, UserModel user, int pokemonId, PokemonModel pokemonModel) {
+    @Column(name = "comment")
+    private String comment;
+
+    // JPA requires a no-arg constructor
+    public UserFavPokemon() {
+    }
+
+    public UserFavPokemon(int id, UserModel user, int pokemonId, String comment) {
         this.id = id;
         this.user = user;
         this.pokemonId = pokemonId;
-        this.pokemonModel = pokemonModel;
+        this.comment = comment;
     }
 
     public UserFavPokemon(UserModel user, int pokemonId) {
+        this.user = user;
+        this.pokemonId = pokemonId;
     }
 
     public int getId() {
@@ -63,14 +65,12 @@ public class UserFavPokemon {
         this.pokemonId = pokemonId;
     }
 
-    public PokemonModel getPokemonModel() {
-        return pokemonModel;
+    public String getComment() {
+        return comment;
     }
 
-    public void setPokemonModel(PokemonModel pokemonModel) {
-        this.pokemonModel = pokemonModel;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
+
 }
-
-
-

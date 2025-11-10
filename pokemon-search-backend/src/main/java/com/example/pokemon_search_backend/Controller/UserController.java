@@ -64,7 +64,8 @@ public class UserController {
                 user.getUsername(),
                 user.getEmail(),
                 null, // Don't send password back
-                user.getTeamName()
+                user.getTeamName(),
+                    user.getFavoritePokemons()
             );
             LoginResponse response = new LoginResponse(true, "Login successful", userDTO);
             return ResponseEntity.ok(response);
