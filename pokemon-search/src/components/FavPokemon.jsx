@@ -1,7 +1,7 @@
 import { usePokemonContext } from "../contexts/PokemonContexts";
-import PokemonDisplay from "./PokemonDisplay";
+import FavoriteCard from "./FavoriteCard";
 import "../css/PokemonDisplay.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 function FavPokemon() {
   const { favorites } = usePokemonContext();
@@ -12,7 +12,7 @@ function FavPokemon() {
         <h2>Favorite Pokemon</h2>
         <div className="pokemon-grid">
           {favorites.map((pokemon) => (
-            <PokemonDisplay pokemon={pokemon} key={pokemon.id} />
+            <FavoriteCard pokemon={pokemon} key={pokemon.id} />
           ))}
         </div>
       </div>
@@ -21,7 +21,7 @@ function FavPokemon() {
     return (
       <div className="favorites-empty">
         <h2>No Favorite Pokemon added</h2>
-        <p>Add you favorite Pokemon</p>
+        <p>Add your favorite Pokemon</p>
         <Link to="/">Back to Home</Link>
       </div>
     );

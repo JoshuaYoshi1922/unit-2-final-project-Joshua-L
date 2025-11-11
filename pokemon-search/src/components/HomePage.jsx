@@ -1,6 +1,6 @@
 import PokemonDisplay from "./PokemonDisplay";
 import { useState, useEffect } from "react";
-import Pagination from "./pagination";
+import Pagination from "./Pagination";
 import "../css/homepage.css";
 
 const BASE_URL = "http://localhost:8080/api/pokemon/";
@@ -27,16 +27,14 @@ function Home() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Received data:", data); // Debug log
 
-      // Map the backend PokemonModel to our frontend structure
       const results = (Array.isArray(data) ? data : []).map((pokemon) => {
-        // Extract type names from the Type objects
+        
         const types = pokemon.types ? pokemon.types.map(type => 
           typeof type === 'object' ? type.name || (type.type && type.type.name) : type
         ).join(", ") : "";
 
-        // Extract move names from the Move objects
+        
         const moves = pokemon.moves ? pokemon.moves.map(move => 
           typeof move === 'object' ? move.name || (move.move && move.move.name) : move
         ).slice(0, 2).join(", ") : "";
@@ -69,14 +67,14 @@ function Home() {
         throw new Error("Pokemon not found");
       }
       const data = await response.json();
-      console.log("Received specific pokemon data:", data); // Debug log
       
-      // Extract type names from the Type objects
+      
+      
       const types = data.types ? data.types.map(type => 
         typeof type === 'object' ? type.name || (type.type && type.type.name) : type
       ).join(", ") : "";
 
-      // Extract move names from the Move objects
+      
       const moves = data.moves ? data.moves.map(move => 
         typeof move === 'object' ? move.name || (move.move && move.move.name) : move
       ).slice(0, 2).join(", ") : "";
@@ -109,11 +107,11 @@ function Home() {
       const newPokemon = await fetchSpecificPokemon(
         `${BASE_URL}${searchTerm.toLowerCase()}`
       );
-      console.log("Search result:", newPokemon); // Debug log
+      
       setPokemons(newPokemon);
       setError(null);
     } catch (error) {
-      console.error("Search error:", error);
+      
       setError("Pokemon not found. Please try again.");
     } finally {
       setLoading(false);
