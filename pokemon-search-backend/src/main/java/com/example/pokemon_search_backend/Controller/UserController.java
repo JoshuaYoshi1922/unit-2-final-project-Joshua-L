@@ -6,7 +6,6 @@ import com.example.pokemon_search_backend.DTO.LoginRequest;
 import com.example.pokemon_search_backend.DTO.LoginResponse;
 import com.example.pokemon_search_backend.DTO.UserDTO;
 import com.example.pokemon_search_backend.Model.UserModel;
-import com.example.pokemon_search_backend.Repository.UserRepository;
 import com.example.pokemon_search_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,3 +86,4 @@ public class UserController {
         return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 }
+

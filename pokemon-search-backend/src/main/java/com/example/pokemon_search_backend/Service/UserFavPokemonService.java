@@ -38,7 +38,7 @@ public class UserFavPokemonService {
         favPokemonRepo.save(favPokemon);
 
         PokemonDTO pokemonDTO = pokemonService.getPokemon(String.valueOf(pokemonId));
-        return new UserFavPokemonDTO(favPokemon.getId(),user, pokemonId, favPokemon.getComment());
+        return new UserFavPokemonDTO(favPokemon.getId(), user.getId(), user.getUsername(), pokemonId, favPokemon.getComment());
 
     }
 
@@ -48,12 +48,13 @@ public class UserFavPokemonService {
                 .ifPresent(favPokemonRepo::delete);
     }
 
+    @Transactional
     public List<UserFavPokemonDTO> getUserFavorites(int userId) {
         List<UserFavPokemon> favorites = favPokemonRepo.findByUser_Id(userId);
         return favorites.stream()
                 .map(fav -> {
-                    PokemonDTO pokemonDTO = pokemonService.getPokemon(String.valueOf(fav.getPokemonId()));
-                    return new UserFavPokemonDTO(fav.getId(), fav.getUser(), fav.getPokemonId(), fav.getComment());
+                    UserModel u = fav.getUser();
+                    return new UserFavPokemonDTO(fav.getId(), u != null ? u.getId() : 0, u != null ? u.getUsername() : null, fav.getPokemonId(), fav.getComment());
                 })
                 .collect(Collectors.toList());
     }
@@ -64,7 +65,8 @@ public class UserFavPokemonService {
                 .orElseThrow(() -> new EntityNotFoundException("Favorite Pokemon not found for user"));
         fav.setComment(comment);
         favPokemonRepo.save(fav);
-        return new UserFavPokemonDTO(fav.getId(), fav.getUser(), fav.getPokemonId(), fav.getComment());
+        UserModel u = fav.getUser();
+        return new UserFavPokemonDTO(fav.getId(), u != null ? u.getId() : 0, u != null ? u.getUsername() : null, fav.getPokemonId(), fav.getComment());
     }
 
     @Transactional
@@ -73,7 +75,8 @@ public class UserFavPokemonService {
                 .orElseThrow(() -> new EntityNotFoundException("Favorite Pokemon not found for user"));
         fav.setComment(null);
         favPokemonRepo.save(fav);
-        return new UserFavPokemonDTO(fav.getId(), fav.getUser(), fav.getPokemonId(), fav.getComment());
+        UserModel u = fav.getUser();
+        return new UserFavPokemonDTO(fav.getId(), u != null ? u.getId() : 0, u != null ? u.getUsername() : null, fav.getPokemonId(), fav.getComment());
     }
 
 }

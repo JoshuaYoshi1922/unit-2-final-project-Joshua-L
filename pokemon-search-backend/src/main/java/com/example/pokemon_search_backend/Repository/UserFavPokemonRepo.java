@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserFavPokemonRepo extends JpaRepository<UserFavPokemon, Long> {
+public interface UserFavPokemonRepo extends JpaRepository<UserFavPokemon, Integer> {
     List<UserFavPokemon> findByUser_Id(int userId);
     boolean existsByUser_IdAndPokemonId(int userId, int pokemonId);
 
     Optional<UserFavPokemon> findByUser_IdAndPokemonId(int userId, int pokemonId);
 
-    Optional<UserFavPokemon> findByUserAndPokemonId(UserModel user, int pokemonId);
+    Optional<UserFavPokemon> findByUserIdAndPokemonId(int userId, int pokemonId);
 
     Optional<UserFavPokemon> findByUserAndPokemonId(Optional<UserModel> user, int pokemonId);
 }

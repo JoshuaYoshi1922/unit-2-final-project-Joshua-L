@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public Optional<UserModel> getUserById(int id) {
-        return userRepository.findById(id);
+        return userRepository.getUserById(id);
     }
 
     public Optional<UserModel> getUserByUsername(String username) {

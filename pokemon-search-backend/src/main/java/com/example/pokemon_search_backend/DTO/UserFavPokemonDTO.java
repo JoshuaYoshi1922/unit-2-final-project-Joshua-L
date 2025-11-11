@@ -1,24 +1,21 @@
 package com.example.pokemon_search_backend.DTO;
 
-import com.example.pokemon_search_backend.Model.PokemonModel;
-import com.example.pokemon_search_backend.Model.UserFavPokemon;
-import com.example.pokemon_search_backend.Model.UserModel;
-
-import java.util.List;
-import java.util.Set;
-
 public class UserFavPokemonDTO {
     private int id;
-    private UserModel user;
+    private int userId;
+    private String username;
     private int pokemonId;
     private String comment;
 
-    public UserFavPokemonDTO(int id, UserModel user, int pokemonId, String comment) {
+    public UserFavPokemonDTO(int id, int userId, String username, int pokemonId, String comment) {
         this.id = id;
-        this.user = user;
+        this.userId = userId;
+        this.username = username;
         this.pokemonId = pokemonId;
         this.comment = comment;
     }
+
+    public UserFavPokemonDTO() {}
 
     public int getId() {
         return id;
@@ -28,12 +25,20 @@ public class UserFavPokemonDTO {
         this.id = id;
     }
 
-    public UserModel getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser(UserModel user) {
-        this.user = user;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public int getPokemonId() {
@@ -51,8 +56,5 @@ public class UserFavPokemonDTO {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
 }
-
-
-
-

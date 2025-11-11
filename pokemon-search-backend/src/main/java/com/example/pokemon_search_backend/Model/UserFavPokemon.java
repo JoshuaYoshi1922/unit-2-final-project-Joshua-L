@@ -14,18 +14,21 @@ public class UserFavPokemon {
     private int id;
 
 
-    @ManyToOne
-    @JoinColumn(name = "user")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private UserModel user;
 
-    @Column(name = "pokemonId")
+    @Column(name = "pokemonId", nullable = false)
     private int pokemonId;
 
-    @Column(name = "comment")
+    @Column(name = "comment", length = 200)
     private String comment;
 
-    public UserFavPokemon() {
+
+    public UserFavPokemon() {}
+
+    public UserFavPokemon(int userId, int pokemonId) {
     }
 
     public UserFavPokemon(int id, UserModel user, int pokemonId, String comment) {
