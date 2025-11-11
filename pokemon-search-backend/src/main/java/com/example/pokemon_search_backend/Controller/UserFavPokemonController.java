@@ -87,4 +87,18 @@ public class UserFavPokemonController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/user/{userId}/pokemon/{pokemonId}/comment")
+    public ResponseEntity<?> deleteFavoriteComment(
+            @PathVariable int userId,
+            @PathVariable int pokemonId) {
+        try {
+            UserFavPokemonDTO updated = favPokemonService.deleteFavoriteComment(userId, pokemonId);
+            return ResponseEntity.ok(updated);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

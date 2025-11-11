@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PokemonDTO {
 
-    private int id;  // change all pokemonmodel to this hopefully
+    private int id;
     private String name;
     private List<String> types;
     public int base_experience;

@@ -25,7 +25,6 @@ public class UserFavPokemon {
     @Column(name = "comment")
     private String comment;
 
-    // JPA requires a no-arg constructor
     public UserFavPokemon() {
     }
 

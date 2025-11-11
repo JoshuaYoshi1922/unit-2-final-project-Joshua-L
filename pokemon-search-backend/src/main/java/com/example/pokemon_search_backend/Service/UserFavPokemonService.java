@@ -67,4 +67,13 @@ public class UserFavPokemonService {
         return new UserFavPokemonDTO(fav.getId(), fav.getUser(), fav.getPokemonId(), fav.getComment());
     }
 
+    @Transactional
+    public UserFavPokemonDTO deleteFavoriteComment(int userId, int pokemonId) {
+        UserFavPokemon fav = favPokemonRepo.findByUser_IdAndPokemonId(userId, pokemonId)
+                .orElseThrow(() -> new EntityNotFoundException("Favorite Pokemon not found for user"));
+        fav.setComment(null);
+        favPokemonRepo.save(fav);
+        return new UserFavPokemonDTO(fav.getId(), fav.getUser(), fav.getPokemonId(), fav.getComment());
+    }
+
 }
