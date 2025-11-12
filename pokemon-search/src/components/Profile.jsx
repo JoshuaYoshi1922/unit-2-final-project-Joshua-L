@@ -63,14 +63,12 @@ function Profile() {
       username: form.username,
       email: form.email,
       teamName: form.teamName,
-      // Send password only if provided
       ...(form.password ? { password: form.password } : {}),
     };
 
     const result = await updateProfile(user.id, payload);
     if (result.success) {
       setMessage("Profile updated successfully");
-      // Clear password fields
       setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
     } else {
       setError(result.message || "Failed to update profile");

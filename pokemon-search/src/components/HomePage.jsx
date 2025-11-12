@@ -28,15 +28,13 @@ function Home() {
       }
       const data = await response.json();
 
-      const results = (Array.isArray(data) ? data : []).map((pokemon) => {
+      const results = data.map((pokemon) => {
         
-        const types = pokemon.types ? pokemon.types.map(type => 
-          typeof type === 'object' ? type.name || (type.type && type.type.name) : type
+        const types = pokemon.types ? pokemon.types.map(type => type
         ).join(", ") : "";
 
         
-        const moves = pokemon.moves ? pokemon.moves.map(move => 
-          typeof move === 'object' ? move.name || (move.move && move.move.name) : move
+        const moves = pokemon.moves ? pokemon.moves.map(move => move
         ).slice(0, 2).join(", ") : "";
 
         return {
@@ -70,13 +68,11 @@ function Home() {
       
       
       
-      const types = data.types ? data.types.map(type => 
-        typeof type === 'object' ? type.name || (type.type && type.type.name) : type
+      const types = data.types ? data.types.map(type => type
       ).join(", ") : "";
 
       
-      const moves = data.moves ? data.moves.map(move => 
-        typeof move === 'object' ? move.name || (move.move && move.move.name) : move
+      const moves = data.moves ? data.moves.map(move => move
       ).slice(0, 2).join(", ") : "";
       
       return [{

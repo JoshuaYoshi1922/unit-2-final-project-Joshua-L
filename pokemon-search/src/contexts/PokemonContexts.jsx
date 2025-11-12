@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect, useCallback } from "react";
+import { createContext, useState, useContext, useEffect} from "react";
 import { useAuth } from "./AuthContext";
 
 const PokemonContext = createContext();
@@ -13,7 +13,7 @@ export const PokemonProvider = ({ children }) => {
   const [favoritesError, setFavoritesError] = useState(null);
 
     async function fetchFavorites() {
-    if (!isAuthenticated || !user?.id) {
+    if (!isAuthenticated || !user.id) {
       setFavorites([]);
       return;
     }
@@ -24,25 +24,52 @@ export const PokemonProvider = ({ children }) => {
       if (!res.ok) throw new Error(`Favorites fetch failed (${res.status})`);
       const data = await res.json();
 
-      const mapped = (Array.isArray(data) ? data : [])
-        .map((fav) => {
-          const id = fav?.pokemon?.id ?? fav?.pokemonId;
-          if (!id) return null; 
-          const name = fav?.pokemon?.name || `Pokemon #${id}`;
-          return {
-            id,
-            name,
-            sprites: {
-              front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-              front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
-            },
-            comment: fav?.comment || "",
-          };
-        })
-        .filter(Boolean);
+      const mapped = await Promise.all(data.map(async (fav) => {
+      const id = fav.pokemonId;
+      if (!id) return null;
 
-      setFavorites(mapped);
-    } catch (e) {
+      let details = fav.pokemon;
+      if (!details) {
+        try {
+          const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+          if (pokeRes.ok) {
+            const pokeData = await pokeRes.json();
+            details = {
+              id: pokeData.id,
+              name: pokeData.name,
+              types: pokeData.types.map(t => t.type.name),
+              height: pokeData.height,
+              weight: pokeData.weight,
+              moves: pokeData.moves.slice(0, 2).map(m => m.move.name),
+            };
+          }
+        } catch (e) {
+          console.warn(`Failed to fetch Pokémon ${id}`, e);
+        }
+      }
+
+      const name = details.name || `Pokemon #${id}`;
+      const types = details.types.join(", ");
+      const moves = details.moves.join(", ");
+
+      return {
+        id,
+        name,
+        type: types,
+        height: details.height,
+        weight: details.weight,
+        moves,
+        sprites: {
+          front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+          front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
+        },
+        comment: fav.comment,
+      };
+    })
+  );
+
+  setFavorites(mapped);
+} catch (e) {
       console.error("Favorites load error", e);
       setFavoritesError(e.message);
       setFavorites([]);
@@ -56,31 +83,49 @@ export const PokemonProvider = ({ children }) => {
   }, [isAuthenticated, user?.id]);
 
   async function addToFavorites(pokemon) {
-    if (!isAuthenticated || !user?.id || !pokemon?.id) return;
-    try {
-      const res = await fetch(
-        `${BACKEND}/api/favorites/user/${user.id}/pokemon/${pokemon.id}`,
-        { method: "POST" }
-      );
-      if (res.status === 409) return; // already favorited
-      if (!res.ok) throw new Error(`Add favorite failed (${res.status})`);
-      const dto = await res.json();
-      const id = dto?.pokemon?.id ?? dto?.pokemonId ?? pokemon.id;
-      const name = dto?.pokemon?.name || pokemon.name || `Pokemon #${id}`;
-      const card = {
-        id,
-        name,
-        sprites: {
-          front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-          front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
-        },
-        comment: dto?.comment || "",
-      };
-      setFavorites((prev) => (prev.some((f) => f.id === id) ? prev : [...prev, card]));
-    } catch (e) {
-      console.error("Add favorite error", e);
-    }
+  if (!isAuthenticated || !user?.id || !pokemon?.id) return;
+  try {
+    const res = await fetch(
+      `${BACKEND}/api/favorites/user/${user.id}/pokemon/${pokemon.id}`,
+      { method: "POST" }
+    );
+    if (res.status === 409) return;
+    if (!res.ok) throw new Error(`Add favorite failed (${res.status})`);
+    const dto = await res.json();
+
+    
+    const p = pokemon;
+    const id = pokemon.id;
+    const name = pokemon.name || `Pokemon #${id}`;
+    
+    
+    const types = Array.isArray(p?.types) 
+      ? p.types.join(", ") 
+      : p?.type || pokemon.type || "";
+    const moves = Array.isArray(p?.moves) 
+      ? p.moves.slice(0, 2).join(", ") 
+      : p?.moves || pokemon.moves || "";
+
+    const card = {
+      id,
+      name,
+      type: types,
+      height: p.height,
+      weight: p.weight,
+      moves,
+      sprites: pokemon.sprites || {
+        front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
+        front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`,
+      },
+      comment: dto.comment || "",
+    };
+    
+    setFavorites((prev) => (prev.some((f) => f.id === id) ? prev : [...prev, card]));
+  } catch (e) {
+    console.error("Add favorite error", e);
   }
+}
+
 
   async function removeFromFavorites(id) {
     if (!isAuthenticated || !user?.id) return;
