@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const userData = await response.json();
-        // Auto-login after registration
+        
         return await login(username, password);
       } else {
         return { success: false, message: "Username already exists" };

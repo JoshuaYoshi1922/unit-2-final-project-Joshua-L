@@ -6,12 +6,11 @@ function TeamName() {
   const [pokeTeam, setPokeTeam] = useState("Name");
   const [editing, setEditing] = useState(false);
 
-  // Sync from context when user loads or changes
   useEffect(() => {
-    if (user?.teamName) {
-      setPokeTeam(user.teamName);
-    } else {
+    if (!user) {
       setPokeTeam("Name");
+    } else {
+      setPokeTeam(user.teamName ||"Name");
     }
   }, [user]);
 
@@ -25,8 +24,7 @@ function TeamName() {
 
   const closeForm = async (event) => {
     event.preventDefault();
-    // Persist to backend if logged in and changed
-    if (isAuthenticated && user?.id) {
+    if (isAuthenticated && user.id) {
       const trimmed = (pokeTeam || "").trim();
       if (trimmed.length > 0 && trimmed !== user.teamName) {
         await updateProfile(user.id, { teamName: trimmed });

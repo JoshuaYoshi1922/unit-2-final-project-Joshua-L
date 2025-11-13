@@ -19,7 +19,7 @@ function Register() {
     setError("");
     setLoading(true);
 
-    // Validation
+    
     if (!username || !email || !password || !confirmPassword || !teamName) {
       setError("Please fill in all fields");
       setLoading(false);

@@ -82,6 +82,7 @@ export const PokemonProvider = ({ children }) => {
     if (isAuthenticated && user?.id) fetchFavorites();
   }, [isAuthenticated, user?.id]);
 
+  // Clears favorites when user logs out
   useEffect(() => {
   if (!isAuthenticated) {
     setFavorites([]);
@@ -91,7 +92,7 @@ export const PokemonProvider = ({ children }) => {
 }, [isAuthenticated]);
 
   async function addToFavorites(pokemon) {
-  if (!isAuthenticated || !user?.id || !pokemon?.id) return;
+  if (!isAuthenticated || !user.id || !pokemon.id) return;
   try {
     const res = await fetch(
       `${BACKEND}/api/favorites/user/${user.id}/pokemon/${pokemon.id}`,
@@ -107,12 +108,8 @@ export const PokemonProvider = ({ children }) => {
     const name = pokemon.name || `Pokemon #${id}`;
     
     
-    const types = Array.isArray(p?.types) 
-      ? p.types.join(", ") 
-      : p?.type || pokemon.type || "";
-    const moves = Array.isArray(p?.moves) 
-      ? p.moves.slice(0, 2).join(", ") 
-      : p?.moves || pokemon.moves || "";
+    const types =  pokemon.type || "";
+    const moves = pokemon.moves || "";
 
     const card = {
       id,
@@ -136,7 +133,7 @@ export const PokemonProvider = ({ children }) => {
 
 
   async function removeFromFavorites(id) {
-    if (!isAuthenticated || !user?.id) return;
+    if (!isAuthenticated || !user.id) return;
     try {
       const res = await fetch(
         `${BACKEND}/api/favorites/user/${user.id}/pokemon/${id}`,
@@ -150,7 +147,7 @@ export const PokemonProvider = ({ children }) => {
   }
 
   async function updateComment(id, comment) {
-    if (!isAuthenticated || !user?.id) return;
+    if (!isAuthenticated || !user.id) return;
     try {
       const res = await fetch(
         `${BACKEND}/api/favorites/user/${user.id}/pokemon/${id}/comment`,
@@ -161,12 +158,9 @@ export const PokemonProvider = ({ children }) => {
         }
       );
       if (!res.ok) throw new Error(`Comment update failed (${res.status})`);
-      let dto = null;
-      try {
-        dto = await res.json();
-      } catch {}
+      
       setFavorites((prev) =>
-        prev.map((f) => (f.id === id ? { ...f, comment: dto?.comment ?? comment } : f))
+        prev.map((f) => (f.id === id ? { ...f, comment: comment } : f))
       );
     } catch (e) {
       console.error("Update comment error", e);
@@ -176,7 +170,7 @@ export const PokemonProvider = ({ children }) => {
   const addComment = updateComment;
 
   async function deleteComment(id) {
-    if (!isAuthenticated || !user?.id) return;
+    if (!isAuthenticated || !user.id) return;
     try {
       const res = await fetch(
         `${BACKEND}/api/favorites/user/${user.id}/pokemon/${id}/comment`,

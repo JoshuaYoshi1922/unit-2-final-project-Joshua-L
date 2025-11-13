@@ -42,7 +42,6 @@ function Profile() {
     setError("");
     setMessage("");
 
-    // Basic validation
     if (!form.username || !form.email || !form.teamName) {
       setError("Username, Email and Team Name are required.");
       return;

@@ -22,7 +22,6 @@ function Home() {
   async function fetchAllPokemons(url) {
     setLoading(true);
     try {
-      console.log("Fetching URL:", url);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
