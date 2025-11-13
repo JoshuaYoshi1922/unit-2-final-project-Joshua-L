@@ -12,6 +12,7 @@ function Header() {
         <div className="pokemon-team">
           <TeamName />
         </div>
+        
 
 
         <h1 className="pokemon-orange">
@@ -27,9 +28,7 @@ function Header() {
           <li className="nav-link">
             <Link to="/favpokemon">Favorites</Link>
           </li>
-          <li className="nav-link">
-            <Link to="/about">About</Link>
-          </li>
+          
           {isAuthenticated ? (
             <>
               <li className="nav-link">
