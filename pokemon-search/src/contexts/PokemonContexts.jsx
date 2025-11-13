@@ -82,6 +82,14 @@ export const PokemonProvider = ({ children }) => {
     if (isAuthenticated && user?.id) fetchFavorites();
   }, [isAuthenticated, user?.id]);
 
+  useEffect(() => {
+  if (!isAuthenticated) {
+    setFavorites([]);
+    setFavoritesError(null);
+    setLoadingFavorites(false);
+  }
+}, [isAuthenticated]);
+
   async function addToFavorites(pokemon) {
   if (!isAuthenticated || !user?.id || !pokemon?.id) return;
   try {

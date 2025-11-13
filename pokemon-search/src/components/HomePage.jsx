@@ -22,11 +22,17 @@ function Home() {
   async function fetchAllPokemons(url) {
     setLoading(true);
     try {
+      console.log("Fetching URL:", url);
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+
+     
+
+          setNextUrl(data.nextPage || data.links?.next || null);
+    setPrevUrl(data.previousPage || data.links?.previous || null);
 
       const results = data.map((pokemon) => {
         
@@ -52,9 +58,11 @@ function Home() {
       });
       setPokemons(results);
     } catch (error) {
-      console.error("Error fetching", error);
-    }
+          setNextUrl(null);
+    setPrevUrl(null);
+    } finally {
     setLoading(false);
+    }
   }
 
   async function fetchSpecificPokemon(url) {
@@ -116,6 +124,7 @@ function Home() {
   };
 
   function gotoNextPage() {
+    console.log("Next URL:", nextUrl);
     if (nextUrl) fetchAllPokemons(nextUrl);
   }
   function gotoPrevPage() {
@@ -152,7 +161,10 @@ function Home() {
       {error && <div className="error-message">{error}</div>}
 
       <div className="next-prev">
-        <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+        <Pagination gotoNextPage={gotoNextPage} 
+  gotoPrevPage={gotoPrevPage}
+  hasNext={!!nextUrl}
+  hasPrev={!!prevUrl} />
       </div>
       <div className="pokemon-grid">
         {loading ? (
@@ -165,7 +177,10 @@ function Home() {
       </div>
       
       <div className="next-prev">
-        <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+        <Pagination gotoNextPage={gotoNextPage} 
+  gotoPrevPage={gotoPrevPage}
+  hasNext={nextUrl}
+  hasPrev={prevUrl} />
       </div>
     </div>
   );
