@@ -1,6 +1,6 @@
 import PokemonDisplay from "./PokemonDisplay";
 import { useState, useEffect } from "react";
-import Pagination from "./pagination";
+import Pagination from "./Pagination";
 import "../css/homepage.css";
 
 const BASE_URL = "http://localhost:8080/api/pokemon/";
@@ -14,67 +14,86 @@ function Home() {
   const [prevUrl, setPrevUrl] = useState("");
 
   useEffect(() => {
-    fetchAllPokemons(`${BASE_URL}${searchPokemon}`);
+    fetchAllPokemons(`${BASE_URL}`);
   }, []);
 
-  async function fetchAllPokemons(BASE_URL) {
+  
+
+  async function fetchAllPokemons(url) {
     setLoading(true);
     try {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
 
-      setNextUrl(data.next);
-      setPrevUrl(data.previous);
+     
 
-      const getAllPokemonsFromAPI = data.results.map(async (poke) => {
-        const res = await fetch(poke.url);
-        const details = await res.json();
+          setNextUrl(data.nextPage || data.links?.next || null);
+    setPrevUrl(data.previousPage || data.links?.previous || null);
+
+      const results = data.map((pokemon) => {
+        
+        const types = pokemon.types ? pokemon.types.map(type => type
+        ).join(", ") : "";
+
+        
+        const moves = pokemon.moves ? pokemon.moves.map(move => move
+        ).slice(0, 2).join(", ") : "";
+
         return {
-          id: details.id,
-          name: details.name,
-          type: details.types.map((t) => t.type.name).join(", "),
-          height: details.height,
-          weight: details.weight,
-          moves: details.moves
-            .map((m) => m.move.name)
-            .slice(0, 2)
-            .join(", "),
-          sprites: details.sprites.front_default,
+          id: pokemon.id,
+          name: pokemon.name,
+          type: types,
+          height: pokemon.height,
+          weight: pokemon.weight,
+          moves: moves,
+          sprites: {
+            front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+            front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`,
+          },
         };
       });
-
-      const results = await Promise.all(getAllPokemonsFromAPI);
-
       setPokemons(results);
     } catch (error) {
-      console.error("Error fetching", error);
-    }
+          setNextUrl(null);
+    setPrevUrl(null);
+    } finally {
     setLoading(false);
+    }
   }
 
-  async function fetchSpecificPokemon(BASE_URL) {
+  async function fetchSpecificPokemon(url) {
     setLoading(true);
     try {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Pokemon not found");
       }
       const data = await response.json();
+      
+      
+      
+      const types = data.types ? data.types.map(type => type
+      ).join(", ") : "";
 
-      return [
-        {
-          id: data.id,
-          name: data.name,
-          type: data.types.map((t) => t.type.name).join(", "),
-          height: data.height,
-          weight: data.weight,
-          moves: data.moves
-            .map((m) => m.move.name)
-            .slice(0, 2)
-            .join(", "),
-          sprites: data.sprites.front_default,
+      
+      const moves = data.moves ? data.moves.map(move => move
+      ).slice(0, 2).join(", ") : "";
+      
+      return [{
+        id: data.id,
+        name: data.name,
+        type: types,
+        height: data.height,
+        weight: data.weight,
+        moves: moves,
+        sprites: {
+          front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`,
+          front_shiny: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${data.id}.png`,
         },
-      ];
+      }];
     } catch (error) {
       console.error("Error fetching", error);
       throw error;
@@ -91,10 +110,11 @@ function Home() {
       const newPokemon = await fetchSpecificPokemon(
         `${BASE_URL}${searchTerm.toLowerCase()}`
       );
+      
       setPokemons(newPokemon);
       setError(null);
     } catch (error) {
-      console.error(error);
+      
       setError("Pokemon not found. Please try again.");
     } finally {
       setLoading(false);
@@ -103,6 +123,7 @@ function Home() {
   };
 
   function gotoNextPage() {
+    console.log("Next URL:", nextUrl);
     if (nextUrl) fetchAllPokemons(nextUrl);
   }
   function gotoPrevPage() {
@@ -139,7 +160,10 @@ function Home() {
       {error && <div className="error-message">{error}</div>}
 
       <div className="next-prev">
-        <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+        <Pagination gotoNextPage={gotoNextPage} 
+  gotoPrevPage={gotoPrevPage}
+  hasNext={!!nextUrl}
+  hasPrev={!!prevUrl} />
       </div>
       <div className="pokemon-grid">
         {loading ? (
@@ -152,7 +176,10 @@ function Home() {
       </div>
       
       <div className="next-prev">
-        <Pagination gotoNextPage={gotoNextPage} gotoPrevPage={gotoPrevPage} />
+        <Pagination gotoNextPage={gotoNextPage} 
+  gotoPrevPage={gotoPrevPage}
+  hasNext={nextUrl}
+  hasPrev={prevUrl} />
       </div>
     </div>
   );

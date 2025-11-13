@@ -1,11 +1,13 @@
 package com.example.pokemon_search_backend.Service;
 
 
+import com.example.pokemon_search_backend.DTO.PokemonDTO;
 import com.example.pokemon_search_backend.DTO.UserFavPokemonDTO;
 import com.example.pokemon_search_backend.Model.UserFavPokemon;
-import com.example.pokemon_search_backend.Model.NewUserModel;
-import com.example.pokemon_search_backend.Repository.UserFavPokemonRepository;
-import com.example.pokemon_search_backend.Repository.UserRepository;
+import com.example.pokemon_search_backend.Model.UserModel;
+import com.example.pokemon_search_backend.Repository.UserFavPokemonRepo;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,51 +17,66 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserFavPokemonService {
-
-    private final UserFavPokemonRepository favPokemonRepository;
-    private final UserRepository userRepository;
+    private final UserFavPokemonRepo favPokemonRepo;
+    private final PokemonService pokemonService;
 
     @Autowired
-    public UserFavPokemonService(UserFavPokemonRepository favPokemonRepository, UserRepository userRepository) {
-        this.favPokemonRepository = favPokemonRepository;
-        this.userRepository = userRepository;
+    public UserFavPokemonService(UserFavPokemonRepo favPokemonRepo, PokemonService pokemonService) {
+        this.pokemonService = pokemonService;
+        this.favPokemonRepo = favPokemonRepo;
     }
 
-    public List<UserFavPokemonDTO> getFavoritesByUserId(int userId) {
-        List<UserFavPokemon> favorites = favPokemonRepository.findByUserId(userId);
+    @Transactional
+    public UserFavPokemonDTO addFavoritePokemon(UserModel user, int pokemonId) {
+        if (favPokemonRepo.existsByUser_IdAndPokemonId(user.getId(), pokemonId)) {
+            throw new RuntimeException("Pokemon already in favorites");
+        }
 
+        UserFavPokemon favPokemon = new UserFavPokemon(user, pokemonId);
+        favPokemon.setUser(user);
+        favPokemon.setPokemonId(pokemonId);
+        favPokemonRepo.save(favPokemon);
+
+        PokemonDTO pokemonDTO = pokemonService.getPokemon(String.valueOf(pokemonId));
+        return new UserFavPokemonDTO(favPokemon.getId(), user.getId(), user.getUsername(), pokemonId, favPokemon.getComment());
+
+    }
+
+    @Transactional
+    public void removeFavoritePokemon(int userId, int pokemonId) {
+        favPokemonRepo.findByUser_IdAndPokemonId(userId, pokemonId)
+                .ifPresent(favPokemonRepo::delete);
+    }
+
+    @Transactional
+    public List<UserFavPokemonDTO> getUserFavorites(int userId) {
+        List<UserFavPokemon> favorites = favPokemonRepo.findByUser_Id(userId);
         return favorites.stream()
-                .map(this::convertToDTO)
+                .map(fav -> {
+                    UserModel u = fav.getUser();
+                    return new UserFavPokemonDTO(fav.getId(), u.getId(), u.getUsername(), fav.getPokemonId(), fav.getComment());
+                })
                 .collect(Collectors.toList());
     }
 
-    public UserFavPokemonDTO addFavorite(UserFavPokemonDTO favPokemonDTO) {
-        Optional<UserFavPokemon> existingFavorite = favPokemonRepository.findByUserIdAndPokemonId(favPokemonDTO.getUserId(), favPokemonDTO.getPokemonId());
-
-        if(existingFavorite.isPresent()) {
-            return convertToDTO(existingFavorite.get());
-        }
-
-        NewUserModel user = userRepository.findById(favPokemonDTO.getUserId())
-                .orElseThrow(()-> new RuntimeException("User not found with ID: " + favPokemonDTO.getUserId()));
-
-        UserFavPokemon newFavorite = new UserFavPokemon();
-        newFavorite.setPokemonId(favPokemonDTO.getPokemonId());
-        newFavorite.setUser(user);
-
-        UserFavPokemon saved = favPokemonRepository.save(newFavorite);
-        return convertToDTO(saved);
+    @Transactional
+    public UserFavPokemonDTO updateFavoriteComment(int userId, int pokemonId, String comment) {
+        UserFavPokemon fav = favPokemonRepo.findByUser_IdAndPokemonId(userId, pokemonId)
+                .orElseThrow(() -> new EntityNotFoundException("Favorite Pokemon not found for user"));
+        fav.setComment(comment);
+        favPokemonRepo.save(fav);
+        UserModel u = fav.getUser();
+        return new UserFavPokemonDTO(fav.getId(), u.getId(), u.getUsername(), fav.getPokemonId(), fav.getComment());
     }
 
-    public void removeFavorite(int userId, int pokemonId) {
-        Optional<UserFavPokemon> favorite = favPokemonRepository.findByUserIdAndPokemonId(userId, pokemonId);
-
-        favorite.ifPresent(favPokemonRepository::delete);
+    @Transactional
+    public UserFavPokemonDTO deleteFavoriteComment(int userId, int pokemonId) {
+        UserFavPokemon fav = favPokemonRepo.findByUser_IdAndPokemonId(userId, pokemonId)
+                .orElseThrow(() -> new EntityNotFoundException("Favorite Pokemon not found for user"));
+        fav.setComment(null);
+        favPokemonRepo.save(fav);
+        UserModel u = fav.getUser();
+        return new UserFavPokemonDTO(fav.getId(), u.getId(), u.getUsername(), fav.getPokemonId(), fav.getComment());
     }
-
-    private UserFavPokemonDTO convertToDTO(UserFavPokemon entity) {
-        return new UserFavPokemonDTO(entity.getId(), entity.getUser().getId(), entity.getPokemonId());
-    }
-
 
 }
