@@ -1,8 +1,10 @@
 @media (min-width: 400px) {
 body  {
   background-image: url("./images/pokeball_bg.jpeg");
-    background-size: contain;
-    background-position: top;
+  background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
     padding: 10px;
     font-size: 16px;
     min-height: 100vh;
@@ -44,18 +46,22 @@ li a:hover {
 }
 
 .footer {
-  margin-top: auto;
-  position: relative;
-  width: 98.5%;
+  /* margin-top: auto; */
+  position: fixed;
+  left: 1%; right: 1%; bottom: 1%;
   background-color: rgb(164, 164, 165);
-  padding: 10px 10px;
+  padding: 1px 10px;
   color: white;
   display: flex;
-  bottom: 0;
+  gap: 12px;
   justify-content: space-between;
   text-align: center;
+  align-items:end;
   border-radius: 2dvb;
+  z-index: 1000;
 }
+
+main { padding-bottom: 64px; }
 
 header .pokemon-orange {
   text-align: center;
