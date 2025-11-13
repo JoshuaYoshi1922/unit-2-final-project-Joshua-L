@@ -1,12 +1,10 @@
 .pokemon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 260px));
+  justify-content: center;
   gap: 1.5rem;
-  padding: 1rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  width: 100%;
-  
+  padding: 1rem 3rem;
+  width: 100%;  
   box-sizing: border-box;
 }
 @media (max-width: 900px) {
