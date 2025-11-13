@@ -54,7 +54,7 @@ public class UserFavPokemonService {
         return favorites.stream()
                 .map(fav -> {
                     UserModel u = fav.getUser();
-                    return new UserFavPokemonDTO(fav.getId(), u != null ? u.getId() : 0, u != null ? u.getUsername() : null, fav.getPokemonId(), fav.getComment());
+                    return new UserFavPokemonDTO(fav.getId(), u.getId(), u.getUsername(), fav.getPokemonId(), fav.getComment());
                 })
                 .collect(Collectors.toList());
     }
@@ -66,7 +66,7 @@ public class UserFavPokemonService {
         fav.setComment(comment);
         favPokemonRepo.save(fav);
         UserModel u = fav.getUser();
-        return new UserFavPokemonDTO(fav.getId(), u != null ? u.getId() : 0, u != null ? u.getUsername() : null, fav.getPokemonId(), fav.getComment());
+        return new UserFavPokemonDTO(fav.getId(), u.getId(), u.getUsername(), fav.getPokemonId(), fav.getComment());
     }
 
     @Transactional
@@ -76,7 +76,7 @@ public class UserFavPokemonService {
         fav.setComment(null);
         favPokemonRepo.save(fav);
         UserModel u = fav.getUser();
-        return new UserFavPokemonDTO(fav.getId(), u != null ? u.getId() : 0, u != null ? u.getUsername() : null, fav.getPokemonId(), fav.getComment());
+        return new UserFavPokemonDTO(fav.getId(), u.getId(), u.getUsername(), fav.getPokemonId(), fav.getComment());
     }
 
 }

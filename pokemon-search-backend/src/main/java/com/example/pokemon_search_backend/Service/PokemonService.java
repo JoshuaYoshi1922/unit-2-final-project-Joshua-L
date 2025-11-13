@@ -7,8 +7,6 @@ import com.example.pokemon_search_backend.Repository.PokemonRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
@@ -123,7 +121,6 @@ public class PokemonService {
                 }
             }
 
-            // Extract pagination info from API response
             int count = root.path("count").asInt();
             String next = root.path("next").asText();
             String previous = root.path("previous").asText();

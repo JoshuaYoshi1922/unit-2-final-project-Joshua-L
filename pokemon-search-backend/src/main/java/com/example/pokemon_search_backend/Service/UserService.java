@@ -69,7 +69,6 @@ public class UserService {
     public UserModel updateUser(int id, UserDTO userDTO) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    // Only update fields that are provided (non-null and not blank)
                     if (userDTO.getUsername() != null && !userDTO.getUsername().isBlank()) {
                         existingUser.setUsername(userDTO.getUsername());
                     }
