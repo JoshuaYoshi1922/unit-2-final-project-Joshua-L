@@ -1,6 +1,5 @@
 import PokemonDisplay from "./PokemonDisplay";
 import { useState, useEffect } from "react";
-import Pagination from "./Pagination";
 import "../css/homepage.css";
 
 const BASE_URL = "http://localhost:8080/api/pokemon/";
@@ -10,8 +9,7 @@ function Home() {
   const [pokemons, setPokemons] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [nextUrl, setNextUrl] = useState("");
-  const [prevUrl, setPrevUrl] = useState("");
+
 
   useEffect(() => {
     fetchAllPokemons(`${BASE_URL}`);
@@ -30,8 +28,7 @@ function Home() {
 
      
 
-          setNextUrl(data.nextPage || data.links?.next || null);
-    setPrevUrl(data.previousPage || data.links?.previous || null);
+         
 
       const results = data.map((pokemon) => {
         
@@ -57,8 +54,7 @@ function Home() {
       });
       setPokemons(results);
     } catch (error) {
-          setNextUrl(null);
-    setPrevUrl(null);
+          
     } finally {
     setLoading(false);
     }
@@ -122,14 +118,7 @@ function Home() {
     setSearchPokemon("");
   };
 
-  function gotoNextPage() {
-    console.log("Next URL:", nextUrl);
-    if (nextUrl) fetchAllPokemons(nextUrl);
-  }
-  function gotoPrevPage() {
-    if (prevUrl) fetchAllPokemons(prevUrl);
-  }
-
+  
   const pressEnter = (e) => {
     if (e.key === "Enter") {
       handlSearch(searchPokemon);
@@ -159,12 +148,7 @@ function Home() {
       </div>
       {error && <div className="error-message">{error}</div>}
 
-      <div className="next-prev">
-        <Pagination gotoNextPage={gotoNextPage} 
-  gotoPrevPage={gotoPrevPage}
-  hasNext={!!nextUrl}
-  hasPrev={!!prevUrl} />
-      </div>
+      
       <div className="pokemon-grid">
         {loading ? (
           <p className="loading">Loading...</p>
@@ -175,12 +159,7 @@ function Home() {
         )}
       </div>
       
-      <div className="next-prev">
-        <Pagination gotoNextPage={gotoNextPage} 
-  gotoPrevPage={gotoPrevPage}
-  hasNext={nextUrl}
-  hasPrev={prevUrl} />
-      </div>
+      
     </div>
   );
 }
