@@ -1,5 +1,6 @@
 package com.example.pokemon_search_backend.Service;
 
+import com.example.pokemon_search_backend.DTO.PaginationPokemonResp;
 import com.example.pokemon_search_backend.DTO.PokemonDTO;
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Repository.PokemonRepository;
@@ -76,8 +77,9 @@ public class PokemonService {
         }
     }
 
-    public List<PokemonDTO> getPokemonList() {
-        String response = restTemplate.getForObject(url, String.class);
+    public List<PokemonDTO> getPokemonList(int offset, int limit) {
+        String paginatedUrl = url + "?offset=" + offset + "&limit=" + limit;
+        String response = restTemplate.getForObject(paginatedUrl, String.class);
         List<PokemonDTO> pokemonList = new ArrayList<>();
 
         try {
@@ -99,6 +101,38 @@ public class PokemonService {
             e.printStackTrace();
             return pokemonList;
 
+        }
+    }
+
+    public PaginationPokemonResp getPokemonListPaginated(int offset, int limit) {
+        String paginatedUrl = url + "?offset=" + offset + "&limit=" + limit;
+        String response = restTemplate.getForObject(paginatedUrl, String.class);
+        List<PokemonDTO> pokemonList = new ArrayList<>();
+
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode results = root.path("results");
+
+            if (results.isArray()) {
+                for (JsonNode pokemonNode : results) {
+                    String pokemonName = pokemonNode.path("name").asText();
+                    PokemonDTO pokemon = getPokemon(pokemonName);
+                    if (pokemon != null) {
+                        pokemonList.add(pokemon);
+                    }
+                }
+            }
+
+            // Extract pagination info from API response
+            int count = root.path("count").asInt();
+            String next = root.path("next").asText();
+            String previous = root.path("previous").asText();
+
+            return new PaginationPokemonResp(pokemonList, pokemonList.size(), next, previous, count);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PaginationPokemonResp(pokemonList, 0, null, null, 0);
         }
     }
 

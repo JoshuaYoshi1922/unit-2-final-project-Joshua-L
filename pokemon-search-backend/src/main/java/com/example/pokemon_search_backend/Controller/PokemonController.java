@@ -2,10 +2,12 @@ package com.example.pokemon_search_backend.Controller;
 
 
 
+import com.example.pokemon_search_backend.DTO.PaginationPokemonResp;
 import com.example.pokemon_search_backend.DTO.PokemonDTO;
 import com.example.pokemon_search_backend.Model.PokemonModel;
 import com.example.pokemon_search_backend.Service.PokemonService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,17 +31,20 @@ public class PokemonController {
 
     @GetMapping("/")
     public List<PokemonDTO> getPokemonList(){
-        return pokemonService.getPokemonList();
+        return pokemonService.getPokemonList(0,151);
     }
 
-//    @PostMapping("/add/{nameOrId}")
-//    public String addPokemon(@PathVariable String nameOrId) {
-//        try {
-//            PokemonDTO pokemon = pokemonService.getPokemon(nameOrId);
-//            pokemonService.savePokemon(pokemon);
-//            return "Pokemon added successfully: " + pokemon.getName();
-//        } catch (Exception e) {
-//            return "Error adding pokemon: " + e.getMessage();
-//        }
-//    }
+    @GetMapping("/pokemon")
+    public ResponseEntity<PaginationPokemonResp> getPokemonList(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+
+        // Validate parameters
+        if (limit > 100) limit = 100; // Max limit
+        if (offset < 0) offset = 0;
+
+        PaginationPokemonResp response = pokemonService.getPokemonListPaginated(offset, limit);
+        return ResponseEntity.ok(response);
+    }
+
 }
