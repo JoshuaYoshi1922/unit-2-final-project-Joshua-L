@@ -1,4 +1,4 @@
-# Pokemon Orange: Find Your Favorite Pokemon (Full-Stack Web Application)
+# Pokemon Orange: Find Your Favorite Pokemon! (Full-Stack Web Application)
 
 <div align="center">
   <h2>Browse and save your favorite Pokemon from all nine regions.</h2>
@@ -20,7 +20,7 @@
   <a href="#installation">Installation</a> • 
   <a href="#database">Database</a> • 
   <a href="#api">API</a> • 
-  <a href="#future">Future Features</a> • 
+  <a href="#future">Future Plans</a> • 
   <a href="#author">Author</a>
 </div>
 
@@ -34,15 +34,13 @@ This project is dedicated to my two boys, Zayden and Zaxton, who are
             cards, or playing the main series video games, Pokémon is everything
             and everywhere.
 
-- When entering the page, users are greeted with a list of the first 151 Pokemon in a Pokemon style card. The card displays the Pokemon's image, pokedex number and some basic information about the Pokmeon like Height, Weight, Type and Moves.
+- When entering the page, users are greeted with a list of the first 151 Pokemon from the Kanto region in a Pokemon style card. The card displays the Pokemon's image, pokedex number and some basic information about the Pokmeon like Height, Weight, Type, Moves and Image.
 - Shiny toggle!
 - Users are able to search for their favorite Pokemon by either the name or by the pokedex number of the Pokemon.
 - When a user creates an account, they are able to save and view their favorite Pokemon.
-- Once a Pokemon is marked a favorite, the user is then able to create a comment about why the Pokemon is a favorite, edit and/or delete thecomment.
+- Once a Pokemon is marked a favorite, the user is then able to create a comment about why the Pokemon is their favorite, edit and/or delete the comment.
 
 Built with a **React + Vite frontend**, a **Java Spring Boot backend**, and a **MySQL database**, Pokemon Orange is a website for every Pokemon fan.
-
----
 
 ---
 
@@ -68,21 +66,24 @@ Built with a **React + Vite frontend**, a **Java Spring Boot backend**, and a **
 
 ### HomePage
 
-<details open>
+<details closed>
     <summary>HomePage</summary>
-    
+    <img src="preview/homepage.png" alt="Screenshot of  Home Page" height="400px" />
 </details>
 
 ### Favorites
 
+<details closed>
 <summary>Favorites</summary>
-   
+       <img src="preview/favoritepokemon.png" alt="Screenshot of Public Home Page view" height="400px" />
+
 </details>
 
 ### Shiny!
 
+<details closed>
 <summary>Shiny!</summary>
-    
+        <img src="preview/shiny.png" alt="Screenshot of Public Home Page view" height="400px" />
 </details>
 
 ---
@@ -171,16 +172,16 @@ To run **Pokemon Orange** locally, you need:
 <a name="database"></a>
 ## 🗄️ Database Structure (ERD)
 
-This project utilizes a MySQL database structured around four core entities, managed by Hibernate with the following relationships:
+This project utilizes a MySQL database
 
 1.  **User** ↔️ **FavoritePokemon**: One-to-Many
 2.  **FavoritePokemon** ↔️ **User**: Many-to-One
 
 ### Entity Relationship Diagram (ERD)
+
   
-<em>Click on image to view in Figma.</em><br />
-<a href="https://www.figma.com/board/dmii5oSakRYDUhwd8dQaEt/Untitled?node-id=0-1&t=1q2RtRHt7A9SYOk9-1"><img src="preview/erd.png" alt="Entity Relationship Diagram" /></a>
-</details>
+[Click here to view figma board](https://www.figma.com/board/dmii5oSakRYDUhwd8dQaEt/Untitled?t=sYs74wUospu6ZrDq-1)
+
 
 ### USERS
 | Field        | Type   | Description                 |
@@ -190,6 +191,7 @@ This project utilizes a MySQL database structured around four core entities, man
 | email        | String | User email                  |
 | teamName     | String | User's Name of Team
 | passwordHash | String | Hashed password          |
+| userFavPokemon| List  | List of users favorite Pokemon|
 
 ### FAVORITE POKEMON
 | Field      | Type          | Description                 |
@@ -210,7 +212,7 @@ This project utilizes a MySQL database structured around four core entities, man
 
 ---
 
-## ⚙️ API Endpoints <a name="api"></a>
+## API Endpoints <a name="api"></a>
 
 <details>
 <summary>Click to expand API endpoints</summary>
@@ -230,8 +232,8 @@ This project utilizes a MySQL database structured around four core entities, man
 |--------|-------------------------------|------------------------|
 | GET    | /api/favorites/user/{userId}  | Get all user favorite pokemon  |
 | POST    | /api/favorites/user/{userId}/pokemon/{pokemonId}/comment      | Post comment on favorite pokemon    |
-| PUT    | /api/favorites/user/{userId}/pokemon/{pokemonId}  | Update comment about favorite pokemon    |
-| DELETE   | /api/favorites/user/{userId}/pokemon/{pokemonId}    | Delete comment    |
+| PUT    | /api/favorites/user/{userId}/pokemon/{pokemonId}/comment  | Update comment about favorite pokemon    |
+| DELETE   | /api/favorites/user/{userId}/pokemon/{pokemonId}/comment    | Delete comment    |
 | POST    | /api/favorites/user/{userId}/pokemon/{pokemonId}  | Add Pokemon to favorites   |
 | PUT | /api/favorites/user/{userId}/pokemon/{pokemonId} | Update favorite Pokemons |
 | DELETE | /api/favorites/user/{userId}/pokemon/{pokemonId}            | Delete Pokemon from favorite Pokemons      |
